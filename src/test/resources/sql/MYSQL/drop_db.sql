@@ -1,0 +1,1 @@
+DROP DATABASE IF EXISTS advant_orm;
