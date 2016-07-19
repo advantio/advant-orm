@@ -9,10 +9,41 @@
     <version>1.0</version>
     <packaging>jar</packaging>
 
+    <name>ADVANT I/O ORM</name>
+    <description>Object/Relational Mapping Framework that provide data persistence (via JDBC) to simplify developer work with RDBMS</description>
+    <url>https://github.com/advantio/advant-orm</url>
+    <licenses>
+        <license>
+            <name>Apache 2</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>marcoromagnolo</id>
+            <name>Marco Romagnolo</name>
+            <url>http://www.marcoromagnolo.it</url>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+                <role>founder</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <build>
         <plugins>
@@ -23,6 +54,17 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.7</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
             </plugin>
         </plugins>
