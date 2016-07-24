@@ -14,15 +14,11 @@
  * limitations under the License.
  */
 
-package io.advant.orm.annotation;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+package io.advant.orm;
 
 /**
- * Identify Column Table
+ *
+ * @param <T>
  */
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Column {
-    String name();
+public interface GenericDAO<T> extends DAO<T> {
 }

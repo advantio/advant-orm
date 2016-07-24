@@ -14,15 +14,27 @@
  * limitations under the License.
  */
 
-package io.advant.orm.annotation;
+package io.advant.orm;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
- * Identify Column Table
+ * Parse ColumnData
  */
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Column {
-    String name();
+public class Parser {
+
+    public static Object parse(Object value) {
+        if (value instanceof Date) {
+            return date((Date) value);
+        } else if (value instanceof Boolean) {
+            return (boolean)value ? 1 : 0;
+        }
+        return value;
+    }
+
+    public static String date(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        return sdf.format(date);
+    }
 }

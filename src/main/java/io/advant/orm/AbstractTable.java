@@ -14,15 +14,33 @@
  * limitations under the License.
  */
 
-package io.advant.orm.annotation;
+package io.advant.orm;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import java.util.Objects;
 
 /**
- * Identify Column Table
+ *
  */
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Column {
-    String name();
+public abstract class AbstractTable {
+
+    public abstract Long getId();
+
+    public abstract void setId(Long id);
+
+    public abstract Long getVersion();
+
+    public abstract void setVersion(Long id);
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AbstractTable that = (AbstractTable) o;
+        return Objects.equals(getId(), that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
 }

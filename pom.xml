@@ -9,7 +9,7 @@
     <version>1.0</version>
     <packaging>jar</packaging>
 
-    <name>ADVANT I/O ORM</name>
+    <name>Advant ORM</name>
     <description>Object/Relational Mapping Framework that provide data persistence (via JDBC) to simplify developer work with RDBMS</description>
     <url>https://github.com/advantio/advant-orm</url>
     <inceptionYear>2016</inceptionYear>
@@ -56,6 +56,10 @@
     </properties>
 
     <distributionManagement>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
         <snapshotRepository>
             <id>ossrh</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
