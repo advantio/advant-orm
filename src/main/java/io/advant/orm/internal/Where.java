@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.advant.orm.command;
+package io.advant.orm.internal;
 
 import java.util.ArrayList;
 import java.util.Iterator;

@@ -16,10 +16,11 @@
 
 package io.advant.orm;
 
-import io.advant.orm.command.Condition;
-import io.advant.orm.command.Where;
+import io.advant.orm.internal.Condition;
+import io.advant.orm.internal.Where;
 import io.advant.orm.exception.OrmException;
 import io.advant.orm.exception.TableParseException;
+import io.advant.orm.internal.*;
 
 import java.lang.reflect.ParameterizedType;
 import java.sql.*;

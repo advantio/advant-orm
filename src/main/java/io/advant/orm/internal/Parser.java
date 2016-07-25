@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.advant.orm;
+package io.advant.orm.internal;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

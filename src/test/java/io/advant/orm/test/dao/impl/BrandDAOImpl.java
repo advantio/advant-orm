@@ -16,8 +16,8 @@
 
 package io.advant.orm.test.dao.impl;
 
-import io.advant.orm.command.Condition;
-import io.advant.orm.command.Where;
+import io.advant.orm.internal.Condition;
+import io.advant.orm.internal.Where;
 import io.advant.orm.AbstractDAO;
 import io.advant.orm.test.entity.BrandEntity;
 import io.advant.orm.test.exception.DataException;

@@ -18,6 +18,7 @@ package io.advant.orm;
 
 import io.advant.orm.exception.ConnectionException;
 import io.advant.orm.exception.TableParseException;
+import io.advant.orm.internal.EntityReflect;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

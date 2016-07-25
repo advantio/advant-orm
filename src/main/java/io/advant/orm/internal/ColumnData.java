@@ -14,41 +14,48 @@
  * limitations under the License.
  */
 
-package io.advant.orm;
+package io.advant.orm.internal;
 
-import java.util.Objects;
+import java.lang.reflect.Field;
 
 /**
  *
  */
-public class JoinData {
-    private final String table;
+public class ColumnData {
+
+    private final boolean id;
+    private final boolean version;
     private final String column;
-    private final String joinTable;
-    private final String joinColumn;
+    private final Field field;
+    private final String table;
     private Object value;
 
-    public JoinData(String table, String column, String joinTable, String joinColumn) {
-        this.table = table;
+    public ColumnData(boolean id, boolean version, String column, String table, Field field) {
+        this.id = id;
+        this.version = version;
         this.column = column;
-        this.joinTable = joinTable;
-        this.joinColumn = joinColumn;
+        this.table = table;
+        this.field = field;
     }
 
-    public String getTable() {
-        return table;
+    public boolean isId() {
+        return id;
+    }
+
+    public boolean isVersion() {
+        return version;
     }
 
     public String getColumn() {
         return column;
     }
 
-    public String getJoinTable() {
-        return joinTable;
+    public String getTable() {
+        return table;
     }
 
-    public String getJoinColumn() {
-        return joinColumn;
+    public Field getField() {
+        return field;
     }
 
     public Object getValue() {
@@ -59,16 +66,4 @@ public class JoinData {
         this.value = value;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        JoinData joinData = (JoinData) o;
-        return Objects.equals(joinTable, joinData.joinTable);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(joinTable);
-    }
 }

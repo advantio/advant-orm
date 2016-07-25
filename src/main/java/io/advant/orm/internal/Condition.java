@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package io.advant.orm.command;
+package io.advant.orm.internal;
 
 import io.advant.orm.Entity;
-import io.advant.orm.EntityReflect;
 import io.advant.orm.exception.TableParseException;
 import io.advant.orm.type.LogicType;
 import io.advant.orm.type.OperatorType;

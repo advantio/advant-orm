@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.advant.orm;
+package io.advant.orm.internal;
 
 import io.advant.orm.annotation.Column;
 import io.advant.orm.annotation.Relation;

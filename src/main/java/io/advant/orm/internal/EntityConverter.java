@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package io.advant.orm;
+package io.advant.orm.internal;
 
+import io.advant.orm.Entity;
 import io.advant.orm.exception.TableParseException;
 
 import java.lang.reflect.Field;
