@@ -80,9 +80,9 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 	}
 
     @Override
-    public void truncate() throws OrmException {
+    public void truncate(boolean force) throws OrmException {
         try {
-			sqlProcessor.truncate();
+			sqlProcessor.truncate(force);
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
 			throw new OrmException(e);

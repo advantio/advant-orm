@@ -106,10 +106,10 @@ public class OrmTest {
     }
 
     private void launch() throws OrmException {
-        brandDAO.truncate();
-        productDAO.truncate();
-        productCategoryDAO.truncate();
-        categoryDAO.truncate();
+        brandDAO.truncate(true);
+        productDAO.truncate(true);
+        productCategoryDAO.truncate(true);
+        categoryDAO.truncate(true);
         insert();
         find();
         findAll();

@@ -39,8 +39,9 @@ public class SqlProcessor {
         this.pstmt = pstmt;
     }
 
-    public void truncate() throws SQLException {
-        String sql = "TRUNCATE TABLE " + reflect.getTable();
+    public void truncate(boolean force) throws SQLException {
+        String cascade = force ? "" : " CASCADE";
+        String sql = "TRUNCATE TABLE " + reflect.getTable() + cascade;
         pstmt = connection.prepareStatement(sql);
         pstmt.executeUpdate();
     }

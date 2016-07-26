@@ -25,6 +25,8 @@ public interface DAO<T> {
 
     void close() throws OrmException;
 
+    void truncate(boolean force) throws OrmException;
+
     void insert(T entity) throws OrmException;
 
     void update(T entity) throws OrmException;
@@ -36,8 +38,6 @@ public interface DAO<T> {
     List<T> findAll() throws OrmException;
 
     T find(Long id) throws OrmException;
-
-    void truncate() throws OrmException;
 
     T find(Conditions conditions) throws OrmException;
 }
