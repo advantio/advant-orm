@@ -17,7 +17,7 @@
 package io.advant.orm.test.dao.impl;
 
 import io.advant.orm.internal.Condition;
-import io.advant.orm.internal.Where;
+import io.advant.orm.internal.Conditions;
 import io.advant.orm.AbstractDAO;
 import io.advant.orm.test.entity.BrandEntity;
 import io.advant.orm.test.exception.DataException;
@@ -38,9 +38,8 @@ public class BrandDAOImpl extends AbstractDAO<BrandEntity> implements BrandDAO<B
     @Override
     public BrandEntity findByUserId(Integer userId) throws DataException {
         try {
-            Where where = new Where(new Condition(BrandEntity.class, "userId", userId));
-            ResultSet rs = select(where);
-            return toEntity(rs);
+            Conditions conditions = new Conditions(new Condition(BrandEntity.class, "userId", userId));
+            return find(conditions);
         } catch (Exception e) {
             throw new DataException(e);
         }
@@ -49,9 +48,8 @@ public class BrandDAOImpl extends AbstractDAO<BrandEntity> implements BrandDAO<B
     @Override
     public BrandEntity findByUsername(String username) throws DataException {
         try {
-            Where where = new Where(new Condition(BrandEntity.class, "username", username));
-            ResultSet rs = select(where);
-            return toEntity(rs);
+            Conditions conditions = new Conditions(new Condition(BrandEntity.class, "username", username));
+            return find(conditions);
         } catch (Exception e) {
             throw new DataException(e);
         }
@@ -60,9 +58,8 @@ public class BrandDAOImpl extends AbstractDAO<BrandEntity> implements BrandDAO<B
     @Override
     public BrandEntity findByEmail(String email) throws DataException {
         try {
-            Where where = new Where(new Condition(BrandEntity.class, "email", email));
-            ResultSet rs = select(where);
-            return toEntity(rs);
+            Conditions conditions = new Conditions(new Condition(BrandEntity.class, "email", email));
+            return find(conditions);
         } catch (Exception e) {
             throw new DataException(e);
         }

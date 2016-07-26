@@ -17,7 +17,7 @@
 package io.advant.orm;
 
 import io.advant.orm.internal.Condition;
-import io.advant.orm.internal.Where;
+import io.advant.orm.internal.Conditions;
 import io.advant.orm.exception.OrmException;
 import io.advant.orm.exception.TableParseException;
 import io.advant.orm.internal.*;
@@ -35,11 +35,11 @@ import java.util.logging.Logger;
 public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 
 	private static final Logger LOGGER = Logger.getLogger(AbstractDAO.class.getName());
-	private Connection connection;
-	private Statement stmt;
+	private final Connection connection;
+	private final Class<T> entityClass;
+	private SqlProcessor sqlProcessor;
 	private PreparedStatement pstmt;
-	private Class<T> entityClass;
-	private EntityReflect<? extends Entity> reflect;
+	private EntityConverter<T> converter;
 
 	protected AbstractDAO(Connection connection) {
 		this.connection = connection;
@@ -55,7 +55,9 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 
 	private void loadEntities() {
 		try {
-			reflect = EntityReflect.getInstance(entityClass);
+			EntityReflect<T> reflect = EntityReflect.getInstance(entityClass);
+			converter = new EntityConverter<>(entityClass, reflect);
+			sqlProcessor = new SqlProcessor(connection, reflect, pstmt);
 		} catch (TableParseException | NoSuchFieldException e) {
 			LOGGER.log(Level.SEVERE, e.getMessage(), e);
 		}
@@ -68,9 +70,6 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 	@Override
 	public void close() throws OrmException {
 		try {
-			if (stmt != null) {
-				stmt.close();
-			}
 			if (pstmt != null) {
 				pstmt.close();
 			}
@@ -81,101 +80,23 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 	}
 
     @Override
-    public void clearTable() throws OrmException {
+    public void truncate() throws OrmException {
         try {
-            stmt = connection.createStatement();
-            stmt.executeUpdate("TRUNCATE TABLE " + reflect.getTable());
+			sqlProcessor.truncate();
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
 			throw new OrmException(e);
-        }
-    }
-
-    protected ResultSet select() throws OrmException {
-		return select(null);
-	}
-
-	protected ResultSet select(Where where) throws OrmException {
-		return select(where, null);
-	}
-
-	protected ResultSet select(Where whereCond, Integer limitVal) throws OrmException {
-		try {
-			stmt = connection.createStatement();
-			String select = "SELECT";
-			String from = "FROM " + reflect.getTable();
-			String join = "";
-			String where = whereCond == null ? "" : whereCond.toString();
-			String limit = limitVal != null ? " LIMIT " + limitVal : "";
-			Set<ColumnData> columns = new HashSet<>();
-			columns.addAll(reflect.getColumns());
-			getTableColumnsForSelect(columns, reflect);
-			List<JoinData> joins = new ArrayList<>();
-			getJoinsForSelect(reflect, joins, new JoinData(null, null, reflect.getTable(), null));
-			Iterator<ColumnData> iterator = columns.iterator();
-			while (iterator.hasNext()) {
-				ColumnData column = iterator.next();
-				boolean isLastColumn = !iterator.hasNext() && !iterator.hasNext();
-				select += " " + column.getTable() + "." + column.getColumn() + " AS " + column.getTable() + "_"
-						+ column.getColumn() + (isLastColumn ? " " : ",");
-			}
-			for (JoinData joinData : joins) {
-				join += " LEFT JOIN " + joinData.getJoinTable() + " AS " + joinData.getJoinTable()
-						+ " ON " + joinData.getJoinTable() + "." + joinData.getJoinColumn()
-						+ "=" + joinData.getTable() + "." + joinData.getColumn();
-			}
-			String sql = select + from + join + where + limit;
-			LOGGER.info(sql);
-			return stmt.executeQuery(sql);
-		} catch (TableParseException | NoSuchFieldException | SQLException e) {
-			LOGGER.log(Level.SEVERE, e.getMessage(), e);
-			throw new OrmException(e);
+        } finally {
+			close();
 		}
 	}
 
 	@Override
 	public void insert(T entity) throws OrmException {
-		String query = null;
 		try {
-			List<ColumnData> columnsData = fromEntity(entity);
-			query = "INSERT INTO " + reflect.getTable();
-			String columns = " (";
-			String values = " (";
-			Iterator<ColumnData> iterator = columnsData.iterator();
-			boolean idIsNull = false;
-			while(iterator.hasNext()){
-				ColumnData columnData = iterator.next();
-				String column = columnData.getColumn();
-				Object value;
-				if (column.equals("version")) {
-					value = "1";
-				} else if (column.equals("id")) {
-					value = columnData.getValue();
-					if (value == null) {
-						idIsNull = true;
-						continue;
-					}
-				} else {
-					value = Parser.parse(columnData.getValue());
-					value = value == null ? "NULL" : "'" + value + "'";
-				}
-				columns += column + ",";
-				values += value + ",";
-			}
-			columns = columns.substring(0, columns.length()-1) + ")";
-			values = values.substring(0, values.length()-1) + ")";
-			query += columns + " VALUES " + values;
-			stmt = connection.createStatement();
-			stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
-			if (idIsNull) {
-				ResultSet rs = stmt.getGeneratedKeys();
-				if (rs.next()) {
-					entity.setId(rs.getLong(1));
-				}
-				rs.close();
-			}
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, e.getMessage() + " Query: " + query , e);
+			sqlProcessor.insert(entity, fromEntity(entity));
+		} catch (SQLException | IllegalAccessException e) {
+			LOGGER.log(Level.SEVERE, e.getMessage(), e);
 			throw new OrmException(e);
 		} finally {
 			close();
@@ -183,29 +104,10 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 	}
 
     @Override
-	public int update(T entity) throws OrmException {
+	public void update(T entity) throws OrmException {
 		try {
-			List<ColumnData> columns = fromEntity(entity);
-			String query = "UPDATE " + reflect.getTable() + " SET ";
-			Iterator<ColumnData> iterator = columns.iterator();
-			Long id = null;
-			Long version = null;
-			while(iterator.hasNext()){
-				ColumnData columnData = iterator.next();
-				if(columnData.getColumn().equals("id")){
-					id = (Long) columnData.getValue();
-				} else if (columnData.getColumn().equals("version")) {
-					version = (Long) columnData.getValue();
-					version = version==null ? 1L : ++version;
-				} else {
-					query += columnData.getColumn() + " = '" + Parser.parse(columnData.getValue()) + "',";
-				}
-			}
-			query += " version = " + version;
-			query += " WHERE id = " + id;
-			stmt = connection.createStatement();
-			return stmt.executeUpdate(query);
-		} catch (SQLException e) {
+			sqlProcessor.update(entity, fromEntity(entity));
+		} catch (SQLException | IllegalAccessException e) {
 			LOGGER.log(Level.SEVERE, e.getMessage(), e);
 			throw new OrmException(e);
 		} finally {
@@ -216,19 +118,20 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 	@Override
 	public T save(T entity) throws OrmException {
 		try {
-			Where where = new Where(new Condition(entityClass, "id", (entity).getId()));
-			ResultSet resultSet = select(where);
-			Integer id = null;
+			Conditions conditions = new Conditions(new Condition(entityClass, "id", (entity).getId()));
+			ResultSet resultSet = sqlProcessor.select(conditions);
+			Long id = null;
 			while (resultSet.next()) {
-				id = resultSet.getInt("id");
+				id = resultSet.getLong("id");
 			}
+			List<ColumnData> columns = fromEntity(entity);
 			if (id==null) {
-				insert(entity);
+				sqlProcessor.insert(entity, columns);
 			} else {
-				update(entity);
+				sqlProcessor.update(entity, columns);
 			}
 			return entity;
-		} catch (SQLException e) {
+		} catch (SQLException | IllegalAccessException | TableParseException | NoSuchFieldException e) {
 			LOGGER.log(Level.SEVERE, e.getMessage(), e);
 			throw new OrmException(e);
 		} finally {
@@ -239,9 +142,7 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 	@Override
 	public void delete(T entity) throws OrmException {
 		try {
-			pstmt = connection.prepareStatement("DELETE FROM " + reflect.getTable() + " WHERE id=?" );
-			pstmt.setObject(1, (entity).getId());
-			pstmt.executeUpdate();
+			sqlProcessor.delete(entity);
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE, e.getMessage(), e);
 			throw new OrmException(e);
@@ -253,47 +154,36 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 	@Override
 	public List<T> findAll() throws OrmException {
 		try {
-            ResultSet rs = select();
+            ResultSet rs = sqlProcessor.select(null);
             return toEntities(rs);
-		} finally {
+		} catch (TableParseException | NoSuchFieldException | SQLException e) {
+			LOGGER.log(Level.SEVERE, e.getMessage(), e);
+			throw new OrmException(e);
+		}finally {
 			close();
 		}
 	}
 
     @Override
 	public T find(Long id) throws OrmException {
+		return find(new Conditions(new Condition(entityClass, "id", id)));
+	}
+
+	@Override
+	public T find(Conditions conditions) throws OrmException {
 		try {
-			Where where = new Where(new Condition(entityClass, "id", id));
-			ResultSet rs = select(where);
-            return toEntity(rs);
+			ResultSet rs = sqlProcessor.select(conditions);
+			return toEntity(rs);
+		} catch (TableParseException | NoSuchFieldException | SQLException e) {
+			LOGGER.log(Level.SEVERE, e.getMessage(), e);
+			throw new OrmException(e);
 		} finally {
 			close();
 		}
 	}
 
-	private void getTableColumnsForSelect(Set<ColumnData> columns, EntityReflect<? extends Entity> entityReflect) throws TableParseException, NoSuchFieldException {
-        for (Class joinEntitiyClass : entityReflect.getJoinEntities().values()) {
-            EntityReflect joinEntityReflect = EntityReflect.getInstance(joinEntitiyClass);
-            columns.addAll(joinEntityReflect.getColumns());
-            getTableColumnsForSelect(columns, joinEntityReflect);
-        }
-	}
-	
-	private void getJoinsForSelect(EntityReflect<? extends Entity> reflect, List<JoinData> joins, JoinData doNotJoin) throws TableParseException, NoSuchFieldException {
-        for (JoinData join : reflect.getJoins()) {
-            if (!joins.contains(join) && !join.equals(doNotJoin)) {
-                joins.add(join);
-            }
-        }
-        for (Class joinEntityClass : reflect.getJoinEntities().values()) {
-            EntityReflect joinEntityReflect = EntityReflect.getInstance(joinEntityClass);
-            getJoinsForSelect(joinEntityReflect, joins, doNotJoin);
-        }
-	}
-
     protected T toEntity(ResultSet rs) throws OrmException {
 		try {
-			EntityConverter<T> converter = new EntityConverter<>(entityClass);
 			return converter.toEntity(rs);
 		} catch (IllegalAccessException | TableParseException | SQLException | InstantiationException | NoSuchFieldException e) {
 			LOGGER.log(Level.SEVERE, e.getMessage(), e);
@@ -303,8 +193,7 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 
     protected List<T> toEntities(ResultSet rs) throws OrmException {
 		try {
-			EntityConverter<T> converter = new EntityConverter<>(entityClass);
-			return converter.toEntities(select());
+			return converter.toEntities(rs);
 		} catch (IllegalAccessException | NoSuchFieldException | SQLException | InstantiationException | TableParseException e) {
 			LOGGER.log(Level.SEVERE, e.getMessage(), e);
 			throw new OrmException(e);
@@ -313,16 +202,11 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 
     protected List<ColumnData> fromEntity(T entity) throws OrmException {
 		try {
-			EntityConverter<T> converter = new EntityConverter<>(entityClass);
 			return converter.fromEntity(entity);
-		} catch (IllegalAccessException | NoSuchFieldException | TableParseException e) {
+		} catch (IllegalAccessException e) {
 			LOGGER.log(Level.SEVERE, e.getMessage(), e);
 			throw new OrmException(e);
 		}
 	}
-
-    protected EntityReflect<? extends Entity> getReflect() {
-        return reflect;
-    }
 
 }

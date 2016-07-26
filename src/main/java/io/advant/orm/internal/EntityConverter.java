@@ -41,10 +41,11 @@ public class EntityConverter<T extends Entity> {
     /**
      * Constructor
      * @param entityClass the Class of an entity
+     * @param entityReflect the EntityReflect instance
      */
-    public EntityConverter(Class<T> entityClass) throws NoSuchFieldException, TableParseException {
+    public EntityConverter(Class<T> entityClass, EntityReflect<T> entityReflect) {
         this.entityClass = entityClass;
-        this.entityReflect = EntityReflect.getInstance(entityClass);
+        this.entityReflect = entityReflect;
     }
 
     /**

@@ -23,32 +23,32 @@ import java.util.List;
 /**
  *
  */
-public class Where {
+public class Conditions {
 
     private List<ConditionPool> pools = new ArrayList<>();
 
-    public Where(Condition condition) {
+    public Conditions(Condition condition) {
         pools.add(new ConditionPool(condition));
     }
 
-    public Where and(Condition condition) {
+    public Conditions and(Condition condition) {
         ConditionPool pool = new ConditionPool(condition);
         pools.add(pool);
         return this;
     }
 
-    public Where or(Condition condition) {
+    public Conditions or(Condition condition) {
         ConditionPool pool = new ConditionPool(condition);
         pools.add(pool);
         return this;
     }
 
-    public Where and(ConditionPool pool) {
+    public Conditions and(ConditionPool pool) {
         pools.add(pool);
         return this;
     }
 
-    public Where or(ConditionPool pool) {
+    public Conditions or(ConditionPool pool) {
         pools.add(pool);
         return this;
     }
