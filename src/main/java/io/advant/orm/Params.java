@@ -27,6 +27,7 @@ import java.util.Set;
 public class Params {
 
     private DBType dbType;
+    private String driver;
     private String database;
     private String host;
     private int port;
@@ -45,14 +46,23 @@ public class Params {
         this.entities = entities;
     }
 
-    public Params(DBType dbType, String host, int port, String database, String user, String password, Set<String> entities, Properties properties) {
-        this.dbType = dbType;
+    public Params(String driver, String host, int port, String database, String user, String password, Set<String> entities) {
+        this.driver = driver;
         this.database = database;
         this.host = host;
         this.port = port;
         this.user = user;
         this.password = password;
         this.entities = entities;
+    }
+
+    public Params(String driver, String host, int port, String database, String user, String password, Set<String> entities, Properties properties) {
+        this(driver, host, port, database, user, password, entities);
+        this.properties = properties;
+    }
+
+    public Params(DBType dbType, String host, int port, String database, String user, String password, Set<String> entities, Properties properties) {
+        this(dbType, host, port, database, user, password, entities);
         this.properties = properties;
     }
 
@@ -62,6 +72,14 @@ public class Params {
 
     public void setDbType(DBType dbType) {
         this.dbType = dbType;
+    }
+
+    public String getDriver() {
+        return driver;
+    }
+
+    public void setDriver(String driver) {
+        this.driver = driver;
     }
 
     public String getDatabase() {

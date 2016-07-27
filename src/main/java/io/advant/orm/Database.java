@@ -55,7 +55,11 @@ public class Database {
             if (params.getPassword() != null) {
                 params.getProperties().put("password", params.getPassword());
             }
-            Class.forName(params.getDbType().getDriver());
+            if (params.getDbType() != null) {
+                Class.forName(params.getDbType().getDriver());
+            } else if (params.getDriver() != null) {
+                Class.forName(params.getDriver());
+            }
         } catch (ClassNotFoundException | TableParseException | NoSuchFieldException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
@@ -85,26 +89,31 @@ public class Database {
         Connection connection = null;
         switch (params.getDbType()) {
             case MYSQL:
-                connection = DriverManager.getConnection(getUrl("jdbc:mysql://", params.getHost(), params.getPort(), params.getDatabase()), params.getProperties());
+                connection = DriverManager.getConnection("jdbc:mysql://" + params.getHost() + ":" + params.getPort() + "/" + params.getDatabase(), params.getProperties());
                 break;
             case POSTGRESQL:
-                connection = DriverManager.getConnection(getUrl("jdbc:postgresql://", params.getHost(), params.getPort(), params.getDatabase()), params.getProperties());
+                connection = DriverManager.getConnection("jdbc:postgresql://" + params.getHost() + ":" + params.getPort() + "/" + params.getDatabase(), params.getProperties());
                 break;
             case IBMDB2:
-                connection = DriverManager.getConnection(getUrl("jdbc:db2://", params.getHost(), params.getPort(), params.getDatabase()), params.getProperties());
+                connection = DriverManager.getConnection("jdbc:db2://" + params.getHost() + ":" + params.getPort() + "/" + params.getDatabase(), params.getProperties());
                 break;
             case MSSQL:
-                connection = DriverManager.getConnection(getUrl("jdbc:microsoft:sqlserver://", params.getHost(), params.getPort(), params.getDatabase()), params.getProperties());
+                connection = DriverManager.getConnection("jdbc:microsoft:sqlserver://" + params.getHost() + ":" + params.getPort() + "/" + params.getDatabase(), params.getProperties());
                 break;
             case ORACLE:
-                connection = DriverManager.getConnection(getUrl("jdbc:oracle:thin:@", params.getHost(), params.getPort(), params.getDatabase()), params.getProperties());
+                connection = DriverManager.getConnection("jdbc:oracle:thin:@" + params.getHost() + ":" + params.getPort() + "/" + params.getDatabase(), params.getProperties());
+                break;
+            case DERBY:
+                connection = DriverManager.getConnection("jdbc:derby:" + params.getDatabase(), params.getProperties());
+                break;
+            case H2:
+                connection = DriverManager.getConnection("jdbc:h2:" + params.getDatabase(), params.getProperties());
+                break;
+            case HSQLDB:
+                connection = DriverManager.getConnection("jdbc:hsqldb:" + params.getDatabase(), params.getProperties());
                 break;
         }
         return connection;
-    }
-
-    private String getUrl(String start, String host, int port, String database) {
-        return start + host + ":" + port + "/" + database;
     }
 
     public void disconnect() throws SQLException {
