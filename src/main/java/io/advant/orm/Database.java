@@ -33,8 +33,8 @@ import java.util.logging.Logger;
 public class Database {
 
     private static final Logger LOGGER = Logger.getLogger(Database.class.getName());
+    private final Params params;
     private static Database instance;
-    private Params params;
     private Connection connection;
 
     private Database(Params params) {
@@ -46,17 +46,6 @@ public class Database {
                     EntityReflect.getInstance(entityClass);
                 }
             }
-        } catch (ClassNotFoundException | TableParseException | NoSuchFieldException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
-        }
-    }
-
-    public static Database getInstance() throws ConnectionException {
-        return instance;
-    }
-
-    public Connection getConnection() throws ConnectionException {
-        if (connection == null) {
             if (params.getProperties() == null) {
                 params.setProperties(new Properties());
             }
@@ -66,39 +55,56 @@ public class Database {
             if (params.getPassword() != null) {
                 params.getProperties().put("password", params.getPassword());
             }
-            try {
-                Class.forName(params.getDbType().getDriver());
-                switch (params.getDbType()) {
-                    case MYSQL:
-                        connection = DriverManager.getConnection(getUrl("jdbc:mysql://", params.getHost(), params.getPort(), params.getDatabase()), params.getProperties());
-                        break;
-                    case POSTGRESQL:
-                        connection = DriverManager.getConnection(getUrl("jdbc:postgresql://", params.getHost(), params.getPort(), params.getDatabase()), params.getProperties());
-                        break;
-                    case IBMDB2:
-                        connection = DriverManager.getConnection(getUrl("jdbc:db2://", params.getHost(), params.getPort(), params.getDatabase()), params.getProperties());
-                        break;
-                    case MSSQL:
-                        connection = DriverManager.getConnection(getUrl("jdbc:microsoft:sqlserver://", params.getHost(), params.getPort(), params.getDatabase()), params.getProperties());
-                        break;
-                    case ORACLE:
-                        connection = DriverManager.getConnection(getUrl("jdbc:oracle:thin:@", params.getHost(), params.getPort(), params.getDatabase()), params.getProperties());
-                        break;
-                }
-            } catch (ClassNotFoundException | SQLException e) {
-                throw new ConnectionException(e);
+            Class.forName(params.getDbType().getDriver());
+        } catch (ClassNotFoundException | TableParseException | NoSuchFieldException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+        }
+    }
+
+    public static Database newInstance(Params params) throws ConnectionException {
+        instance = new Database(params);
+        return instance;
+    }
+
+    public static Database getInstance() throws ConnectionException {
+        return instance;
+    }
+
+    public Connection getConnection() throws ConnectionException {
+        try {
+            if (connection == null || connection.isClosed()) {
+                connection = connect();
             }
+        } catch (ClassNotFoundException | SQLException e) {
+            throw new ConnectionException(e);
+        }
+        return connection;
+    }
+
+    private Connection connect() throws ClassNotFoundException, SQLException {
+        Connection connection = null;
+        switch (params.getDbType()) {
+            case MYSQL:
+                connection = DriverManager.getConnection(getUrl("jdbc:mysql://", params.getHost(), params.getPort(), params.getDatabase()), params.getProperties());
+                break;
+            case POSTGRESQL:
+                connection = DriverManager.getConnection(getUrl("jdbc:postgresql://", params.getHost(), params.getPort(), params.getDatabase()), params.getProperties());
+                break;
+            case IBMDB2:
+                connection = DriverManager.getConnection(getUrl("jdbc:db2://", params.getHost(), params.getPort(), params.getDatabase()), params.getProperties());
+                break;
+            case MSSQL:
+                connection = DriverManager.getConnection(getUrl("jdbc:microsoft:sqlserver://", params.getHost(), params.getPort(), params.getDatabase()), params.getProperties());
+                break;
+            case ORACLE:
+                connection = DriverManager.getConnection(getUrl("jdbc:oracle:thin:@", params.getHost(), params.getPort(), params.getDatabase()), params.getProperties());
+                break;
         }
         return connection;
     }
 
     private String getUrl(String start, String host, int port, String database) {
         return start + host + ":" + port + "/" + database;
-    }
-
-    public static Database newInstance(Params params) throws ConnectionException {
-        instance = new Database(params);
-        return instance;
     }
 
     public void disconnect() throws SQLException {

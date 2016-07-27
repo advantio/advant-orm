@@ -21,49 +21,55 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- *
+ * @author Marco Romagnolo
  */
 public class Conditions {
 
     private List<ConditionPool> pools = new ArrayList<>();
+    private List<Condition> list = new ArrayList<>();
 
     public Conditions(Condition condition) {
         pools.add(new ConditionPool(condition));
+        list.add(condition);
+    }
+
+    public Conditions(ConditionPool pool) {
+        pools.add(pool);
+        list.addAll(pool.getConditions());
     }
 
     public Conditions and(Condition condition) {
         ConditionPool pool = new ConditionPool(condition);
         pools.add(pool);
+        list.add(condition);
         return this;
     }
 
     public Conditions or(Condition condition) {
         ConditionPool pool = new ConditionPool(condition);
         pools.add(pool);
+        list.add(condition);
         return this;
     }
 
     public Conditions and(ConditionPool pool) {
         pools.add(pool);
+        list.addAll(pool.getConditions());
         return this;
     }
 
     public Conditions or(ConditionPool pool) {
         pools.add(pool);
+        list.addAll(pool.getConditions());
         return this;
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder(" WHERE ");
-        Iterator<ConditionPool> iterator = pools.iterator();
-        boolean isFirst = true;
-        while (iterator.hasNext()) {
-            ConditionPool pool = iterator.next();
-            recursivePool(sb, isFirst, pool);
-            isFirst = false;
-        }
-        return sb.toString();
+    public List<ConditionPool> getPools() {
+        return pools;
+    }
+
+    public List<Condition> getList() {
+        return list;
     }
 
     private void recursivePool(StringBuilder sb, boolean isFirst, ConditionPool pool) {
@@ -94,4 +100,15 @@ public class Conditions {
         }
     }
 
+    public String asSQL() {
+        final StringBuilder sb = new StringBuilder();
+        Iterator<ConditionPool> iterator = pools.iterator();
+        boolean isFirst = true;
+        while (iterator.hasNext()) {
+            ConditionPool pool = iterator.next();
+            recursivePool(sb, isFirst, pool);
+            isFirst = false;
+        }
+        return sb.toString();
+    }
 }

@@ -31,10 +31,6 @@ public class ConditionPool {
     private ConditionPool pool;
     private LogicType logic = LogicType.AND;
 
-    public ConditionPool(ConditionPool pool) {
-        this.pool = pool;
-    }
-
     public ConditionPool(Condition condition) {
         Collections.addAll(this.conditions, condition);
     }

@@ -38,7 +38,6 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 	private final Connection connection;
 	private final Class<T> entityClass;
 	private SqlProcessor sqlProcessor;
-	private PreparedStatement pstmt;
 	private EntityConverter<T> converter;
 
 	protected AbstractDAO(Connection connection) {
@@ -57,7 +56,7 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 		try {
 			EntityReflect<T> reflect = EntityReflect.getInstance(entityClass);
 			converter = new EntityConverter<>(entityClass, reflect);
-			sqlProcessor = new SqlProcessor(connection, reflect, pstmt);
+			sqlProcessor = new SqlProcessor(connection, reflect);
 		} catch (TableParseException | NoSuchFieldException e) {
 			LOGGER.log(Level.SEVERE, e.getMessage(), e);
 		}
@@ -70,9 +69,7 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 	@Override
 	public void close() throws OrmException {
 		try {
-			if (pstmt != null) {
-				pstmt.close();
-			}
+            sqlProcessor.close();
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE, e.getMessage(), e);
 			throw new OrmException(e);

@@ -32,11 +32,11 @@ public class SqlProcessor {
     private final EntityReflect<? extends Entity> reflect;
     private final Connection connection;
     private PreparedStatement pstmt;
+    private Statement stmt;
 
-    public SqlProcessor(Connection connection, EntityReflect<? extends Entity> reflect, PreparedStatement pstmt) {
+    public SqlProcessor(Connection connection, EntityReflect<? extends Entity> reflect) {
         this.connection = connection;
         this.reflect = reflect;
-        this.pstmt = pstmt;
     }
 
     public void truncate(boolean force) throws SQLException {
@@ -50,7 +50,6 @@ public class SqlProcessor {
         String select = "SELECT";
         String from = "FROM " + reflect.getTable();
         String join = "";
-        String where = conditions == null ? "" : conditions.toString();
         Set<ColumnData> columns = new HashSet<>();
         columns.addAll(reflect.getColumns());
         getTableColumnsForSelect(columns, reflect);
@@ -68,9 +67,16 @@ public class SqlProcessor {
                     + " ON " + joinData.getJoinTable() + "." + joinData.getJoinColumn()
                     + "=" + joinData.getTable() + "." + joinData.getColumn();
         }
+        String where = conditions != null ? " WHERE " + conditions.asSQL() + " " : "";
         String sql = select + from + join + where;
-        LOGGER.info(sql);
+        LOGGER.fine(sql);
         pstmt = connection.prepareStatement(sql);
+        if (conditions != null) {
+            int i = 0;
+            for (Condition condition : conditions.getList()) {
+                pstmt.setObject(++i, condition.getValue());
+            }
+        }
         return pstmt.executeQuery();
     }
 
@@ -98,34 +104,34 @@ public class SqlProcessor {
         String sql = "INSERT INTO " + reflect.getTable();
         String columns = " (";
         String values = " (";
-        Iterator<ColumnData> iterator = columnsData.iterator();
         boolean idIsNull = false;
-        while(iterator.hasNext()){
-            ColumnData columnData = iterator.next();
-            String column = columnData.getColumn();
-            Object value;
-            if (column.equals("version")) {
-                value = "1";
-            } else if (column.equals("id")) {
-                value = columnData.getValue();
-                if (value == null) {
-                    idIsNull = true;
-                    continue;
-                }
-            } else {
-                value = Parser.parse(columnData.getValue());
-                value = value == null ? "NULL" : "'" + value + "'";
+        for (ColumnData columnData : columnsData) {
+            if (!columnData.isId()) {
+                columns += columnData + ",";
+                values += "?,";
             }
-            columns += column + ",";
-            values += value + ",";
         }
         columns = columns.substring(0, columns.length()-1) + ")";
         values = values.substring(0, values.length()-1) + ")";
         sql += columns + " VALUES " + values;
-        pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-        pstmt.executeUpdate();
+        pstmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+        int i = 0;
+        for (ColumnData columnData : columnsData) {
+            if (columnData.isId()) {
+                idIsNull = columnData.getValue() == null;
+            } else {
+                Object value;
+                if (columnData.isVersion()) {
+                    value = 1L;
+                } else {
+                    value = (columnData.getValue() == null) ? "NULL" : "'" + Parser.parse(columnData.getValue()) + "'";
+                }
+                pstmt.setObject(++i, value);
+            }
+        }
+        pstmt.executeQuery();
         if (idIsNull) {
-            ResultSet rs = pstmt.getGeneratedKeys();
+            ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
                 entity.setId(rs.getLong(1));
             }
@@ -133,25 +139,29 @@ public class SqlProcessor {
         }
     }
 
-    public <T extends Entity> void update(T entity, List<ColumnData> columns) throws IllegalAccessException, SQLException {
+    public <T extends Entity> void update(T entity, List<ColumnData> columnsData) throws IllegalAccessException, SQLException {
         String sql = "UPDATE " + reflect.getTable() + " SET ";
-        Iterator<ColumnData> iterator = columns.iterator();
-        Long id = null;
-        Long version = null;
-        while(iterator.hasNext()){
-            ColumnData columnData = iterator.next();
-            if(columnData.getColumn().equals("id")){
-                id = (Long) columnData.getValue();
-            } else if (columnData.getColumn().equals("version")) {
-                version = (Long) columnData.getValue();
-                version = version==null ? 1L : ++version;
-            } else {
-                sql += columnData.getColumn() + " = '" + Parser.parse(columnData.getValue()) + "',";
+        for (ColumnData columnData : columnsData) {
+            if(!columnData.isId()){
+                sql += columnData.getColumn() + " = ?,";
             }
         }
-        sql += " version = " + version;
-        sql += " WHERE id = " + id;
+        sql += " WHERE id = ?";
         pstmt = connection.prepareStatement(sql);
+        Object id = null;
+        int i = 0;
+        for (ColumnData columnData : columnsData) {
+            if(columnData.isId()){
+                id = columnData.getColumn();
+            } else if (columnData.isVersion()) {
+                Long value = ((Long) columnData.getValue()) + 1L;
+                pstmt.setObject(++i, value);
+            } else {
+                Object value = (columnData.getValue() == null) ? "NULL" : "'" + Parser.parse(columnData.getValue()) + "'";
+                pstmt.setObject(++i, value);
+            }
+        }
+        pstmt.setObject(++i, id);
         pstmt.executeUpdate();
     }
 
@@ -160,5 +170,14 @@ public class SqlProcessor {
         pstmt = connection.prepareStatement(sql);
         pstmt.setObject(1, (entity).getId());
         pstmt.executeUpdate();
+    }
+
+    public void  close() throws SQLException {
+        if (pstmt != null) {
+            pstmt.close();
+        }
+        if (stmt != null) {
+            stmt.close();
+        }
     }
 }
