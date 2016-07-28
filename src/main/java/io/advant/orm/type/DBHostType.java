@@ -19,19 +19,17 @@ package io.advant.orm.type;
 /**
  *
  */
-public enum DBType {
+public enum DBHostType {
     MYSQL("com.mysql.jdbc.Driver"),
     POSTGRESQL("org.postgresql.Driver"),
     IBMDB2("COM.ibm.db2.jdbc.app.DB2Driver"),
     MSSQL("com.microsoft.sqlserver.jdbc.SQLServerDrive"),
     ORACLE("oracle.jdbc.driver.OracleDriver"),
-    DERBY("org.apache.derby.jdbc.EmbeddedDriver"),
-    H2("org.h2.Driver"),
-    HSQLDB("org.hsqldb.jdbc.JDBCDriver");
+    SYBASE("net.sourceforge.jtds.jdbc.Driver");
 
     private final String driver;
 
-    DBType(String driver) {
+    DBHostType(String driver) {
         this.driver = driver;
     }
 

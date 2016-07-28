@@ -1,3 +1,10 @@
+-- Create Database and User
+
+CREATE USER 'test'@'localhost' IDENTIFIED BY 'test';
+CREATE DATABASE IF NOT EXISTS advant_orm;
+GRANT ALL PRIVILEGES ON advant_orm . * TO 'test'@'localhost';
+FLUSH PRIVILEGES;
+
 -- Create Tables
 
 CREATE TABLE test_brand
@@ -37,4 +44,6 @@ CREATE TABLE test_product
   create_date DATE NOT NULL,
   modify_date DATE
 );
+
+
 

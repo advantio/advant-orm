@@ -16,8 +16,7 @@
 
 package io.advant.orm.test;
 
-import io.advant.orm.Database;
-import io.advant.orm.Params;
+import io.advant.orm.DB;
 import io.advant.orm.GenericDAO;
 import io.advant.orm.GenericDAOImpl;
 import io.advant.orm.exception.ConnectionException;
@@ -30,79 +29,25 @@ import io.advant.orm.test.entity.BrandEntity;
 import io.advant.orm.test.entity.CategoryEntity;
 import io.advant.orm.test.entity.ProductCategoryEntity;
 import io.advant.orm.test.entity.ProductEntity;
-import io.advant.orm.type.DBType;
 import org.junit.Assert;
-import org.junit.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Test main functionality
  */
-public class OrmTest {
+public class TestSuite {
 
     private BrandDAO<BrandEntity> brandDAO;
     private ProductDAO<ProductEntity> productDAO;
     private GenericDAO<ProductCategoryEntity> productCategoryDAO;
     private GenericDAO<CategoryEntity> categoryDAO;
 
-    private Properties getProperties(String fileName) throws IOException {
-        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fileName);
-        Properties config = new Properties();
-        if (inputStream != null) {
-            config.load(inputStream);
-        }
-        return config;
-    }
-
-    /**
-     * Launch all test in order
-     */
-    @Test
-    public void launchAll() throws Exception {
-        List<Properties> list = new ArrayList<>();
-        list.add(getProperties("postgresql.properties"));
-        list.add(getProperties("mysql.properties"));
-        list.add(getProperties("oracle.properties"));
-        list.add(getProperties("mssql.properties"));
-        list.add(getProperties("ibmdb2.properties"));
-        for (Properties prop : list) {
-            prop.list(System.out);
-
-            String host = prop.getProperty("host");
-            int port = Integer.valueOf(prop.getProperty("port"));
-            String database = prop.getProperty("database");
-            String user = prop.getProperty("user");
-            String password = prop.getProperty("password");
-            String dbtype = prop.getProperty("dbtype");
-            Set<String> entities = new HashSet<>();
-            entities.add(BrandEntity.class.getName());
-            entities.add(CategoryEntity.class.getName());
-            entities.add(ProductCategoryEntity.class.getName());
-            entities.add(ProductEntity.class.getName());
-            Params conf = new Params(DBType.valueOf(dbtype.toUpperCase()), host, port, database, user, password, entities);
-
-            Database db = null;
-            try {
-                db = Database.newInstance(conf);
-                configure(db.getConnection());
-                launch();
-            } catch (ConnectionException e) {
-                System.out.println("No connection available for this database: " + conf + "\n");
-            } finally {
-                if (db != null) {
-                    try {
-                        db.disconnect();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
+    public TestSuite(DB db) throws ConnectionException, OrmException {
+        configure(db.getConnection());
+        launch();
     }
 
     private void launch() throws OrmException {
