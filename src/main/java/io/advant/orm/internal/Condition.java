@@ -42,11 +42,11 @@ public class Condition {
 
     public Condition(Class<? extends Entity> entityClass, String column, OperatorType op, Object value) {
         this.value = value;
-        this.column = column;
         this.op = op;
         try {
             EntityReflect<? extends Entity> reflect = EntityReflect.getInstance(entityClass);
             this.table = reflect.getTable();
+            this.column = reflect.getColumnFromProperty(column);
         } catch (NoSuchFieldException | TableParseException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }

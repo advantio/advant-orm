@@ -16,7 +16,11 @@
 
 package io.advant.orm;
 
+import io.advant.orm.exception.OrmException;
+import io.advant.orm.internal.Conditions;
+
 import java.sql.Connection;
+import java.util.List;
 
 /**
  *
@@ -28,4 +32,18 @@ public class GenericDAOImpl<T extends Entity> extends AbstractDAO<T> implements 
         super(entityClass, connection);
     }
 
+    @Override
+    public List<T> find(T entityClass, Conditions conditions) throws OrmException {
+        return null;
+    }
+
+    @Override
+    public void update(T entityClass, Conditions conditions) throws OrmException {
+
+    }
+
+    @Override
+    public void delete(T entityClass, Conditions conditions) throws OrmException {
+
+    }
 }

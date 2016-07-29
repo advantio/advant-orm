@@ -102,6 +102,10 @@ public class EntityReflect<T> {
         }
     }
 
+    public String getColumnFromProperty(String property) throws NoSuchFieldException {
+        return getColumnFromTable(tableClass, property);
+    }
+
     private <E> Class<? super E> getTableFromEntity(Class<E> entityClass) throws TableParseException {
         Table tableAnnot;
         Class<? super E> tableClass;

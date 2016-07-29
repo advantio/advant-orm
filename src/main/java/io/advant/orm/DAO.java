@@ -19,21 +19,26 @@ package io.advant.orm;
 import io.advant.orm.exception.OrmException;
 import io.advant.orm.internal.Conditions;
 
+import java.sql.ResultSet;
 import java.util.List;
 
 public interface DAO<T> {
 
     void close() throws OrmException;
 
-    void truncate(boolean force) throws OrmException;
+    int truncate(boolean force) throws OrmException;
+
+    int exec(String sql) throws OrmException;
+
+    ResultSet call(String sql) throws OrmException;
 
     void insert(T entity) throws OrmException;
 
-    void update(T entity) throws OrmException;
+    int update(T entity) throws OrmException;
 
-    T save(T object) throws OrmException;
+    Integer save(T object) throws OrmException;
 
-    void delete(T object) throws OrmException;
+    int delete(T object) throws OrmException;
 
     List<T> findAll() throws OrmException;
 

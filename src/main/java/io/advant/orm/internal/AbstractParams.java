@@ -14,20 +14,17 @@ public class AbstractParams implements Params {
     private String uri;
     private String user;
     private String password;
-    private Set<String> entities;
     private Properties properties;
 
-    public AbstractParams( String user, String password, Set<String> entities) {
-        this.entities = entities;
+    public AbstractParams( String user, String password) {
         this.password = password;
         this.user = user;
         configure();
     }
 
-    public AbstractParams(String user, String password, Set<String> entities, Properties properties) {
+    public AbstractParams(String user, String password, Properties properties) {
         this.user = user;
         this.password = password;
-        this.entities = entities;
         this.properties = properties;
         configure();
     }
@@ -76,15 +73,6 @@ public class AbstractParams implements Params {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    @Override
-    public Set<String> getEntities() {
-        return entities;
-    }
-
-    public void setEntities(Set<String> entities) {
-        this.entities = entities;
     }
 
     @Override

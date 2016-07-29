@@ -28,7 +28,5 @@ public interface Params {
 
     String getUri();
 
-    Set<String> getEntities();
-
     Properties getProperties();
 }

@@ -23,6 +23,7 @@ import io.advant.orm.internal.EntityReflect;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,11 +37,11 @@ public class DB {
     private static DB instance;
     private Connection connection;
 
-    private DB(Params params) {
+    private DB(Params params, Set<String> entities) {
         this.params = params;
         try {
-            if (params.getEntities()!=null) {
-                for (String entity : params.getEntities()) {
+            if (entities!=null) {
+                for (String entity : entities) {
                     Class<?> entityClass = Class.forName(entity);
                     EntityReflect.getInstance(entityClass);
                 }
@@ -51,8 +52,8 @@ public class DB {
         }
     }
 
-    public static DB newInstance(Params params) throws ConnectionException {
-        instance = new DB(params);
+    public static DB newInstance(Params params, Set<String> entities) throws ConnectionException {
+        instance = new DB(params, entities);
         return instance;
     }
 
@@ -80,17 +81,5 @@ public class DB {
         if (connection!=null) {
             connection.close();
         }
-    }
-
-    public void begin() throws SQLException {
-        connection.setAutoCommit(false);
-    }
-
-    public void commit() throws SQLException {
-        connection.commit();
-    }
-
-    public void rollback() throws SQLException {
-        connection.rollback();
     }
 }

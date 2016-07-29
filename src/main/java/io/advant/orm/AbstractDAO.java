@@ -77,9 +77,9 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 	}
 
     @Override
-    public void truncate(boolean force) throws OrmException {
+    public int truncate(boolean force) throws OrmException {
         try {
-			sqlProcessor.truncate(force);
+			return sqlProcessor.truncate(force);
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
 			throw new OrmException(e);
@@ -87,6 +87,26 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 			close();
 		}
 	}
+
+    @Override
+    public int exec(String sql) throws OrmException {
+        try {
+            return sqlProcessor.exec(sql);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            throw new OrmException(e);
+        }
+    }
+
+    @Override
+    public ResultSet call(String sql) throws OrmException {
+        try {
+            return sqlProcessor.call(sql);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            throw new OrmException(e);
+        }
+    }
 
 	@Override
 	public void insert(T entity) throws OrmException {
@@ -101,9 +121,9 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 	}
 
     @Override
-	public void update(T entity) throws OrmException {
+	public int update(T entity) throws OrmException {
 		try {
-			sqlProcessor.update(entity, fromEntity(entity));
+			return sqlProcessor.update(fromEntity(entity));
 		} catch (SQLException | IllegalAccessException e) {
 			LOGGER.log(Level.SEVERE, e.getMessage(), e);
 			throw new OrmException(e);
@@ -113,8 +133,9 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 	}
 
 	@Override
-	public T save(T entity) throws OrmException {
+	public Integer save(T entity) throws OrmException {
 		try {
+            Integer result = null;
 			Conditions conditions = new Conditions(new Condition(entityClass, "id", (entity).getId()));
 			ResultSet resultSet = sqlProcessor.select(conditions);
 			Long id = null;
@@ -125,9 +146,9 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 			if (id==null) {
 				sqlProcessor.insert(entity, columns);
 			} else {
-				sqlProcessor.update(entity, columns);
+                result = sqlProcessor.update(columns);
 			}
-			return entity;
+            return result;
 		} catch (SQLException | IllegalAccessException | TableParseException | NoSuchFieldException e) {
 			LOGGER.log(Level.SEVERE, e.getMessage(), e);
 			throw new OrmException(e);
@@ -137,9 +158,9 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 	}
 
 	@Override
-	public void delete(T entity) throws OrmException {
+	public int delete(T entity) throws OrmException {
 		try {
-			sqlProcessor.delete(entity);
+			return sqlProcessor.delete(entity);
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE, e.getMessage(), e);
 			throw new OrmException(e);

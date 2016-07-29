@@ -13,14 +13,14 @@ public abstract class CustomParams extends AbstractParams implements Params {
     private String driver;
     private String uri;
 
-    public CustomParams(String driver, String uri, String user, String password, Set<String> entities) {
-        super(user, password, entities);
+    public CustomParams(String driver, String uri, String user, String password) {
+        super(user, password);
         setDriver(driver);
         setUri(uri);
     }
 
-    public CustomParams(String driver, String uri, String user, String password, Set<String> entities, Properties properties) {
-        super(user, password, entities, properties);
+    public CustomParams(String driver, String uri, String user, String password, Properties properties) {
+        super(user, password, properties);
         setDriver(driver);
         setUri(uri);
     }

@@ -14,15 +14,15 @@ public class DBLocalParams extends AbstractParams {
     private String database;
     private DBLocalType dbType;
 
-    public DBLocalParams(DBLocalType dbType, String database, String user, String password, Set<String> entities) {
-        super(user, password, entities);
+    public DBLocalParams(DBLocalType dbType, String database, String user, String password) {
+        super(user, password);
         this.dbType = dbType;
         this.database = database;
         configure();
     }
 
-    public DBLocalParams(DBLocalType dbType, String database, String user, String password, Set<String> entities, Properties properties) {
-        super(user, password, entities, properties);
+    public DBLocalParams(DBLocalType dbType, String database, String user, String password, Properties properties) {
+        super(user, password, properties);
         this.dbType = dbType;
         this.database = database;
         configure();

@@ -16,9 +16,21 @@
 
 package io.advant.orm;
 
+import io.advant.orm.exception.OrmException;
+import io.advant.orm.internal.Conditions;
+
+import java.util.List;
+
 /**
  *
  * @param <T>
  */
 public interface GenericDAO<T> extends DAO<T> {
+
+    List<T> find(T entityClass, Conditions conditions) throws OrmException;
+
+    void update(T entityClass, Conditions conditions) throws OrmException;
+
+    void delete(T entityClass, Conditions conditions) throws OrmException;
+
 }

@@ -31,19 +31,37 @@ public class SqlProcessor {
     private static final Logger LOGGER = Logger.getLogger(SqlProcessor.class.getName());
     private final EntityReflect<? extends Entity> reflect;
     private final Connection connection;
-    private PreparedStatement pstmt;
     private Statement stmt;
+    private PreparedStatement pstmt;
+    private CallableStatement cstmt;
 
     public SqlProcessor(Connection connection, EntityReflect<? extends Entity> reflect) {
         this.connection = connection;
         this.reflect = reflect;
     }
 
-    public void truncate(boolean force) throws SQLException {
+    public static int exec(Connection connection, String sql) throws SQLException {
+        Statement stmt = connection.createStatement();
+        int result = stmt.executeUpdate(sql);
+        stmt.close();
+        return result;
+    }
+
+    public int exec(String sql) throws SQLException {
+        stmt = connection.createStatement();
+        return stmt.executeUpdate(sql);
+    }
+
+    public ResultSet call(String sql) throws SQLException {
+        cstmt = connection.prepareCall(sql);
+        return cstmt.executeQuery();
+    }
+
+    public int truncate(boolean force) throws SQLException {
         String cascade = force ? "" : " CASCADE";
         String sql = "TRUNCATE TABLE " + reflect.getTable() + cascade;
         pstmt = connection.prepareStatement(sql);
-        pstmt.executeUpdate();
+        return pstmt.executeUpdate();
     }
 
     public ResultSet select(Conditions conditions) throws SQLException, NoSuchFieldException, TableParseException {
@@ -131,7 +149,7 @@ public class SqlProcessor {
         }
         pstmt.executeQuery();
         if (idIsNull) {
-            ResultSet rs = stmt.getGeneratedKeys();
+            ResultSet rs = pstmt.getGeneratedKeys();
             if (rs.next()) {
                 entity.setId(rs.getLong(1));
             }
@@ -139,7 +157,7 @@ public class SqlProcessor {
         }
     }
 
-    public <T extends Entity> void update(T entity, List<ColumnData> columnsData) throws IllegalAccessException, SQLException {
+    public int update(List<ColumnData> columnsData) throws IllegalAccessException, SQLException {
         String sql = "UPDATE " + reflect.getTable() + " SET ";
         for (ColumnData columnData : columnsData) {
             if(!columnData.isId()){
@@ -162,22 +180,25 @@ public class SqlProcessor {
             }
         }
         pstmt.setObject(++i, id);
-        pstmt.executeUpdate();
+        return pstmt.executeUpdate();
     }
 
-    public <T extends Entity> void delete(T entity) throws SQLException {
+    public <T extends Entity> int delete(T entity) throws SQLException {
         String sql = "DELETE FROM " + reflect.getTable() + " WHERE id=?";
         pstmt = connection.prepareStatement(sql);
         pstmt.setObject(1, (entity).getId());
-        pstmt.executeUpdate();
+        return pstmt.executeUpdate();
     }
 
     public void  close() throws SQLException {
+        if (stmt != null) {
+            stmt.close();
+        }
         if (pstmt != null) {
             pstmt.close();
         }
-        if (stmt != null) {
-            stmt.close();
+        if (cstmt != null) {
+            cstmt.close();
         }
     }
 }

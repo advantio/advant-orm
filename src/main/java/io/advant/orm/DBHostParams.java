@@ -4,7 +4,6 @@ import io.advant.orm.internal.AbstractParams;
 import io.advant.orm.type.DBHostType;
 
 import java.util.Properties;
-import java.util.Set;
 
 /**
  *
@@ -16,25 +15,27 @@ public class DBHostParams extends AbstractParams {
     private int port;
     private String database;
 
-    public DBHostParams(DBHostType dbType, String host, int port, String database, String user, String password, Set<String> entities) {
-        super(user, password, entities);
+    public DBHostParams(DBHostType dbType, String host, int port, String database, String user, String password) {
+        super(user, password);
         this.dbType = dbType;
         this.host = host;
         this.port = port;
         this.database = database;
-        configure();
+        setDriver(dbType.getDriver());
+        setUri();
     }
 
-    public DBHostParams(DBHostType dbType, String host, int port, String database, String user, String password, Set<String> entities, Properties properties) {
-        super(user, password, entities, properties);
+    public DBHostParams(DBHostType dbType, String host, int port, String database, String user, String password, Properties properties) {
+        super(user, password, properties);
         this.dbType = dbType;
         this.host = host;
         this.port = port;
         this.database = database;
-        configure();
+        setDriver(dbType.getDriver());
+        setUri();
     }
 
-    private void configure() {
+    private void setUri() {
         switch (dbType) {
             case MYSQL:
                 setUri("jdbc:mysql://" + host + ":" + port + "/" + database);
