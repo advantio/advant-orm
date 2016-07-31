@@ -15,4 +15,8 @@ public class DefaultLocalParams extends DBLocalParams {
     public DefaultLocalParams(DBLocalType dbType) {
         super(dbType, DATABASE, USER, PASSWORD);
     }
+
+    public DefaultLocalParams(DBLocalType dbType, String database) {
+        super(dbType, database, USER, PASSWORD);
+    }
 }

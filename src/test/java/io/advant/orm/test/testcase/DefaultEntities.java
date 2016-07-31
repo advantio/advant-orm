@@ -13,7 +13,6 @@ import java.util.Set;
  */
 public class DefaultEntities {
 
-
     public static Set<String> get() {
         HashSet<String> entities = new HashSet<>();
         entities.add(BrandEntity.class.getName());

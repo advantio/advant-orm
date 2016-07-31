@@ -6,7 +6,6 @@ import io.advant.orm.internal.SqlProcessor;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -19,29 +18,52 @@ public class Query {
 
     private static final Logger LOGGER = Logger.getLogger(Query.class.getName());
 
-    public static int exec(Connection connection, String sql) throws OrmException {
+    public static void runScript(Connection connection, InputStream inputStream) throws OrmException {
         try {
-            return SqlProcessor.exec(connection, sql);
+            if (inputStream!=null) {
+                SqlProcessor.runScript(connection, inputStream);
+            }
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
             throw new OrmException(e);
         }
     }
 
-    public static int exec(Connection connection, InputStream inputStream) throws OrmException {
+    public static int[] exec(Connection connection, String queries[]) throws OrmException {
         try {
-            ByteArrayOutputStream result = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = inputStream.read(buffer)) != -1) {
-                result.write(buffer, 0, length);
-            }
-            String sql = result.toString("UTF-8");
-            return SqlProcessor.exec(connection, sql);
-        } catch (SQLException | IOException e) {
+            return SqlProcessor.execBatch(connection, queries);
+        } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
             throw new OrmException(e);
         }
+    }
+
+    public static int[] exec(Connection connection, String query, Object[][] values) throws OrmException {
+        try {
+            return SqlProcessor.execBatch(connection, query, values);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            throw new OrmException(e);
+        }
+    }
+
+    public static int[] call(Connection connection, String query, Object values[][]) throws OrmException {
+        try {
+            return SqlProcessor.callBatch(connection, query, values);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            throw new OrmException(e);
+        }
+    }
+
+    private static String streamToString(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = inputStream.read(buffer)) != -1) {
+            byteArray.write(buffer, 0, length);
+        }
+        return byteArray.toString("UTF-8");
     }
 
 }

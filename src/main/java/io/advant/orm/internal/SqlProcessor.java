@@ -19,8 +19,13 @@ package io.advant.orm.internal;
 import io.advant.orm.Entity;
 import io.advant.orm.exception.TableParseException;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.sql.*;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -40,10 +45,51 @@ public class SqlProcessor {
         this.reflect = reflect;
     }
 
-    public static int exec(Connection connection, String sql) throws SQLException {
+    public static boolean runScript(Connection connection, InputStream input) throws SQLException{
+        ScriptRunner s = new ScriptRunner(connection, true, true);
+        try {
+            s.runScript(new InputStreamReader(input));
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+        }
+        return false;
+    }
+
+    public static int[] execBatch(Connection connection, String[] queries) throws SQLException {
         Statement stmt = connection.createStatement();
-        int result = stmt.executeUpdate(sql);
+        for (String query : queries) {
+            stmt.addBatch(query);
+        }
+        int[] result = stmt.executeBatch();
         stmt.close();
+        return result;
+    }
+
+    public static int[] execBatch(Connection connection, String query, Object[][] values) throws SQLException {
+        PreparedStatement pstmt = connection.prepareStatement(query);
+        for (int i=0; i<values.length; i++) {
+            for (int j=0; j<values[i].length; j++) {
+                Object value = values[i][j];
+                pstmt.setObject(j, value);
+            }
+            pstmt.addBatch(query);
+        }
+        int[] result = pstmt.executeBatch();
+        pstmt.close();
+        return result;
+    }
+
+    public static int[] callBatch(Connection connection, String query, Object[][] values) throws SQLException {
+        CallableStatement cstmt = connection.prepareCall(query);
+        for (int i=0; i<values.length; i++) {
+            for (int j=0; j<values[i].length; j++) {
+                Object value = values[i][j];
+                cstmt.setObject(j, value);
+            }
+            cstmt.addBatch(query);
+        }
+        int[] result = cstmt.executeBatch();
+        cstmt.close();
         return result;
     }
 

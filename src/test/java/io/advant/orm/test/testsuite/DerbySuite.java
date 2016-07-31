@@ -1,11 +1,8 @@
 package io.advant.orm.test.testsuite;
 
-import io.advant.orm.test.testcase.AbstractTestDAO;
 import io.advant.orm.test.testsuite.derby.DerbyCreateDB;
 import io.advant.orm.test.testsuite.derby.DerbyDropDB;
 import io.advant.orm.test.testsuite.derby.DerbyTestDAO;
-import io.advant.orm.test.testsuite.mysql.MysqlCreateDB;
-import io.advant.orm.test.testsuite.mysql.MysqlDropDB;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 

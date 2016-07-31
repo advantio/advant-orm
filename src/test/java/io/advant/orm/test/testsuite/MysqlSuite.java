@@ -1,6 +1,5 @@
 package io.advant.orm.test.testsuite;
 
-import io.advant.orm.test.testcase.AbstractTestDAO;
 import io.advant.orm.test.testsuite.mysql.MysqlCreateDB;
 import io.advant.orm.test.testsuite.mysql.MysqlDropDB;
 import io.advant.orm.test.testsuite.mysql.MysqlTestDAO;

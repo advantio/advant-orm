@@ -21,14 +21,14 @@ import java.util.List;
 /**
  * Created by Marco on 29/07/2016.
  */
-public class AbstractTestDAO {
+public class TestDAO {
 
     private BrandDAO<BrandEntity> brandDAO;
     private ProductDAO<ProductEntity> productDAO;
     private GenericDAO<ProductCategoryEntity> productCategoryDAO;
     private GenericDAO<CategoryEntity> categoryDAO;
 
-    public void configure(Connection connection) {
+    public TestDAO(Connection connection) {
         brandDAO = new BrandDAOImpl(connection);
         productDAO = new ProductDAOImpl(connection);
         productCategoryDAO = new GenericDAOImpl<>(ProductCategoryEntity.class, connection);

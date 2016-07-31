@@ -24,13 +24,13 @@ public class DerbyCreateDB extends AbstractCreateDB {
 
     @BeforeClass
     public static void connect() throws ConnectionException {
-        Params params = new DefaultLocalParams(DBLocalType.DERBY);
+        DefaultLocalParams params = new DefaultLocalParams(DBLocalType.DERBY, "memory:" + DefaultLocalParams.DATABASE + ";create=true;user=test;password=test");
         connection = DB.newInstance(params, DefaultEntities.get()).getConnection();
     }
 
     @Test
     public void create() throws ConnectionException, OrmException {
-        super.create("MYSQL", connection);
+        super.create("DERBY", connection);
     }
 
 }

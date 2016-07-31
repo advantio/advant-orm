@@ -4,7 +4,6 @@ import io.advant.orm.internal.AbstractParams;
 import io.advant.orm.type.DBLocalType;
 
 import java.util.Properties;
-import java.util.Set;
 
 /**
  *
@@ -18,17 +17,19 @@ public class DBLocalParams extends AbstractParams {
         super(user, password);
         this.dbType = dbType;
         this.database = database;
-        configure();
+        setDriver(dbType.getDriver());
+        setUri();
     }
 
     public DBLocalParams(DBLocalType dbType, String database, String user, String password, Properties properties) {
         super(user, password, properties);
         this.dbType = dbType;
         this.database = database;
-        configure();
+        setDriver(dbType.getDriver());
+        setUri();
     }
 
-    private void configure() {
+    private void setUri() {
         switch (dbType) {
             case DERBY:
                 setUri("jdbc:derby:" + database);

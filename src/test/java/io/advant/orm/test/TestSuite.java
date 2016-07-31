@@ -23,14 +23,14 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         DerbySuite.class,
-        H2Suite.class,
+        /**H2Suite.class,
         HSQLDBSuite.class,
         MysqlSuite.class,
         PostgresSuite.class,
         OracleSuite.class,
         MSSQLSuite.class,
         IBMDB2Suite.class,
-        SybaseSuite.class
+        SybaseSuite.class**/
 })
 public class TestSuite {
 }

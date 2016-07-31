@@ -30,6 +30,6 @@ public class DerbyDropDB extends AbstractDropDB {
 
     @Test
     public void create() throws ConnectionException, OrmException {
-        super.drop("MYSQL", connection);
+        super.drop("DERBY", connection);
     }
 }
