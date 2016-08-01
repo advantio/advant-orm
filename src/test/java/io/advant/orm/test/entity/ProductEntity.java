@@ -1,8 +1,8 @@
 package io.advant.orm.test.entity;
 
 import io.advant.orm.Entity;
-import io.advant.orm.test.table.ProductTable;
 import io.advant.orm.annotation.Relation;
+import io.advant.orm.test.table.ProductTable;
 
 import java.util.List;
 

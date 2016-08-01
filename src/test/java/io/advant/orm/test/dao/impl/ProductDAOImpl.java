@@ -17,8 +17,8 @@
 package io.advant.orm.test.dao.impl;
 
 import io.advant.orm.AbstractDAO;
-import io.advant.orm.test.entity.ProductEntity;
 import io.advant.orm.test.dao.ProductDAO;
+import io.advant.orm.test.entity.ProductEntity;
 
 import java.sql.Connection;
 

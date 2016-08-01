@@ -16,8 +16,8 @@
 
 package io.advant.orm.test.table;
 
-import io.advant.orm.annotation.Column;
 import io.advant.orm.AbstractTable;
+import io.advant.orm.annotation.Column;
 import io.advant.orm.annotation.Table;
 
 /**

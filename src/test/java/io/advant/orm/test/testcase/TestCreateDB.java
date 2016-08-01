@@ -10,9 +10,15 @@ import java.sql.Connection;
 /**
  *
  */
-public abstract class AbstractCreateDB {
+public class TestCreateDB {
 
-    public void create(String fileName, Connection connection) throws ConnectionException, OrmException {
+    private Connection connection;
+
+    public TestCreateDB(Connection connection) {
+        this.connection = connection;
+    }
+
+    public void create(String fileName) throws ConnectionException, OrmException {
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream("sql/" + fileName + "/create.sql");
         Query.runScript(connection, inputStream);
     }

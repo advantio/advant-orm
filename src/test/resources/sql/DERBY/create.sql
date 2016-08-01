@@ -4,7 +4,7 @@ CREATE TABLE test_brand
 (
   id INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
   version INT DEFAULT NULL,
-  name varchar(255) NOT NULL
+  name VARCHAR(255) NOT NULL
 );
 
 
@@ -12,8 +12,8 @@ CREATE TABLE test_category
 (
   id INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
   version INT DEFAULT NULL,
-  name varchar(255) NOT NULL,
-  description varchar(1000)
+  name VARCHAR(255) NOT NULL,
+  description VARCHAR(1000)
 );
 
 
@@ -32,9 +32,9 @@ CREATE TABLE test_product
   version INT DEFAULT NULL,
   brand_id INT NOT NULL,
   blocked BOOLEAN NOT NULL,
-  name varchar(255) NOT NULL,
-  description varchar(255) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  description VARCHAR(255) NOT NULL,
   create_date DATE NOT NULL,
-  modify_date DATE
+  modify_date DATE DEFAULT NULL
 );
 

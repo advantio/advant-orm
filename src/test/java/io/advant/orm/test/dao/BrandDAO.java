@@ -16,9 +16,9 @@
 
 package io.advant.orm.test.dao;
 
+import io.advant.orm.DAO;
 import io.advant.orm.test.entity.BrandEntity;
 import io.advant.orm.test.exception.DataException;
-import io.advant.orm.DAO;
 
 /**
  *

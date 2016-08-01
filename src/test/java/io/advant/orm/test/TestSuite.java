@@ -16,7 +16,7 @@
 
 package io.advant.orm.test;
 
-import io.advant.orm.test.testsuite.*;
+import io.advant.orm.test.testsuite.DerbySuite;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 

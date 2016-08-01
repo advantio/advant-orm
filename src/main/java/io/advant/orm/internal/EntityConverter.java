@@ -19,12 +19,15 @@ package io.advant.orm.internal;
 import io.advant.orm.Entity;
 import io.advant.orm.exception.TableParseException;
 
+import java.io.InputStream;
+import java.io.Reader;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -148,28 +151,35 @@ public class EntityConverter<T extends Entity> {
             field.setAccessible(true);
             String columnName = getColumnName(columnData.getTable(), columnData.getColumn());
             Class<?> type = field.getType();
+            Object value = resultSet.getObject(columnName);
             if (type == Integer.class) {
-                field.set(currentEntity, resultSet.getInt(columnName));
+                field.setInt(currentEntity, (Integer) value);
+            } else if (type == Short.class) {
+                field.setShort(currentEntity, (Short) value);
             } else if (type == Long.class) {
-                field.set(currentEntity, resultSet.getLong(columnName));
-            } else if (type == boolean.class) {
-                field.set(currentEntity, resultSet.getBoolean(columnName));
-            } else if (type == Boolean.class) {
-                field.set(currentEntity, resultSet.getBoolean(columnName));
+                field.setLong(currentEntity, (Long) value);
+            } else if (type == Boolean.class || type == boolean.class) {
+                field.setBoolean(currentEntity, (Boolean) value);
             } else if (type == Float.class) {
-                field.set(currentEntity, resultSet.getFloat(columnName));
+                field.setFloat(currentEntity, (Float) value);
             } else if (type == Double.class) {
-                field.set(currentEntity, resultSet.getDouble(columnName));
+                field.setDouble(currentEntity, (Double) value);
             } else if (type == String.class) {
-                field.set(currentEntity, resultSet.getString(columnName));
+                field.set(currentEntity, value);
             } else if (type == Date.class) {
-                field.set(currentEntity, resultSet.getDate(columnName));
-            } else if (type == Time.class) {
-                field.set(currentEntity, resultSet.getTime(columnName));
-            } else if (type == URL.class) {
-                field.set(currentEntity, resultSet.getURL(columnName));
+                field.set(currentEntity, value);
+            } else if (type == Calendar.class) {
+                field.set(currentEntity, value);
             } else if (type == BigDecimal.class) {
-                field.set(currentEntity, resultSet.getBigDecimal(columnName));
+                field.set(currentEntity, value);
+            } else if (type == Character.class) {
+                field.setChar(currentEntity, (Character) value);
+            } else if (type == Byte.class) {
+                field.setByte(currentEntity, (Byte) value);
+            } else if (type == InputStream.class) {
+                field.set(currentEntity, value);
+            } else if (type == Reader.class) {
+                field.set(currentEntity, value);
             }
         }
     }

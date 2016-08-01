@@ -16,15 +16,14 @@
 
 package io.advant.orm.test.dao.impl;
 
+import io.advant.orm.AbstractDAO;
 import io.advant.orm.internal.Condition;
 import io.advant.orm.internal.Conditions;
-import io.advant.orm.AbstractDAO;
+import io.advant.orm.test.dao.BrandDAO;
 import io.advant.orm.test.entity.BrandEntity;
 import io.advant.orm.test.exception.DataException;
-import io.advant.orm.test.dao.BrandDAO;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 
 /**
  *

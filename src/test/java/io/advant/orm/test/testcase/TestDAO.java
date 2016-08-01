@@ -2,7 +2,6 @@ package io.advant.orm.test.testcase;
 
 import io.advant.orm.GenericDAO;
 import io.advant.orm.GenericDAOImpl;
-import io.advant.orm.exception.ConnectionException;
 import io.advant.orm.exception.OrmException;
 import io.advant.orm.test.dao.BrandDAO;
 import io.advant.orm.test.dao.ProductDAO;
@@ -35,16 +34,8 @@ public class TestDAO {
         categoryDAO = new GenericDAOImpl<>(CategoryEntity.class, connection);
     }
 
-    public void testDAO() throws OrmException {
-        clear();
-        insert();
-        find();
-        findAll();
-        update();
-        delete();
-    }
-
-    private void clear() throws OrmException {
+    public void clear() throws OrmException {
+        System.out.println(getClass().getName() + ": Clear tables");
         brandDAO.truncate(true);
         productDAO.truncate(true);
         productCategoryDAO.truncate(true);
@@ -55,7 +46,7 @@ public class TestDAO {
      * Test Insert
      */
     public void insert() throws OrmException {
-        System.out.println("Inserting data...");
+        System.out.println(getClass().getName() + ": Insert data");
 
         // Insert Brands
 
@@ -63,13 +54,12 @@ public class TestDAO {
         brand.setId(1000L);
         brand.setName("Brand");
         brandDAO.insert(brand);
-        System.out.println("Inserted brand: " + brand);
 
         BrandEntity brand1 = new BrandEntity();
         brand1.setId(1001L);
         brand1.setName("Brand1");
         brandDAO.insert(brand1);
-        System.out.println("Inserted brand: " + brand1);
+        System.out.println(getClass().getName() + ": Inserted brand: " + brand1);
 
         //Insert Categories
 
@@ -78,33 +68,33 @@ public class TestDAO {
         category.setName("Category name");
         category.setDescription("Category description");
         categoryDAO.insert(category);
-        System.out.println("Inserted category: " + category);
+        System.out.println(getClass().getName() + ": Inserted category: " + category);
 
         CategoryEntity category1 = new CategoryEntity();
         category1.setId(1001L);
         category1.setName("Category name 1");
         category1.setDescription("Category description 1");
         categoryDAO.insert(category1);
-        System.out.println("Inserted category: " + category1);
+        System.out.println(getClass().getName() + ": Inserted category: " + category1);
 
         CategoryEntity category2 = new CategoryEntity();
         category2.setId(1002L);
         category2.setName("Category name 2");
         category2.setDescription("Category description 2");
         categoryDAO.insert(category2);
-        System.out.println("Inserted category: " + category2);
+        System.out.println(getClass().getName() + ": Inserted category: " + category2);
 
         //Insert Products
 
         ProductEntity product = new ProductEntity();
         product.setId(1000L);
         product.setBrandId(brand.getId());
-        product.setBlocked(false);
-        product.setCreateDate(new Date());
+        //product.setBlocked(false);
+        //product.setCreateDate(new Date());
         product.setName("Product name");
         product.setDescription("Product description");
         productDAO.insert(product);
-        System.out.println("Inserted product: " + product);
+        System.out.println(getClass().getName() + ": Inserted product: " + product);
 
         ProductEntity product1 = new ProductEntity();
         product1.setBrandId(brand.getId());
@@ -113,7 +103,7 @@ public class TestDAO {
         product1.setName("Product name 1");
         product1.setDescription("Product description 1");
         productDAO.insert(product1);
-        System.out.println("Inserted product: " + product1);
+        System.out.println(getClass().getName() + ": Inserted product: " + product1);
 
         ProductEntity product2 = new ProductEntity();
         product2.setBrandId(brand.getId());
@@ -122,7 +112,7 @@ public class TestDAO {
         product2.setName("Product name 2");
         product2.setDescription("Product description 2");
         productDAO.insert(product2);
-        System.out.println("Inserted product: " + product2);
+        System.out.println(getClass().getName() + ": Inserted product: " + product2);
 
         //Insert Product's Categories
 
@@ -130,25 +120,25 @@ public class TestDAO {
         prodCat.setCategoryId(category.getId());
         prodCat.setProductId(product.getId());
         productCategoryDAO.insert(prodCat);
-        System.out.println("Inserted product's category: " + prodCat);
+        System.out.println(getClass().getName() + ": Inserted product's category: " + prodCat);
 
         ProductCategoryEntity prodCat1 = new ProductCategoryEntity();
         prodCat1.setCategoryId(category1.getId());
         prodCat1.setProductId(product.getId());
         productCategoryDAO.insert(prodCat1);
-        System.out.println("Inserted product's category: " + prodCat1);
+        System.out.println(getClass().getName() + ": Inserted product's category: " + prodCat1);
 
         ProductCategoryEntity prodCat2 = new ProductCategoryEntity();
         prodCat2.setCategoryId(category1.getId());
         prodCat2.setProductId(product1.getId());
         productCategoryDAO.insert(prodCat2);
-        System.out.println("Inserted product's category: " + prodCat2);
+        System.out.println(getClass().getName() + ": Inserted product's category: " + prodCat2);
 
         ProductCategoryEntity prodCat3 = new ProductCategoryEntity();
         prodCat3.setCategoryId(category2.getId());
         prodCat3.setProductId(product2.getId());
         productCategoryDAO.insert(prodCat3);
-        System.out.println("Inserted product's category: " + prodCat3);
+        System.out.println(getClass().getName() + ": Inserted product's category: " + prodCat3);
     }
 
     /**
@@ -157,30 +147,30 @@ public class TestDAO {
     public void find() throws OrmException {
         System.out.println("Find product...");
         ProductEntity product = productDAO.find(1000L);
-        System.out.println("Found product: " + product);
+        System.out.println(getClass().getName() + ": Found product: " + product);
         Assert.assertNotNull(product);
     }
 
     /**
      * FindAll test
      */
-    private void findAll() throws OrmException {
+    public void findAll() throws OrmException {
         List<ProductEntity> products = productDAO.findAll();
-        System.out.println("Found: " + products);
+        System.out.println(getClass().getName() + ": Found: " + products);
         Assert.assertNotNull(products);
     }
 
     /**
      * Update test
      */
-    private void update() {
-
+    public void update() {
+        System.out.println(getClass().getName() + ": Update data");
     }
 
     /**
      * Delete Test
      */
-    private void delete() {
-
+    public void delete() {
+        System.out.println(getClass().getName() + ": Delete data");
     }
 }

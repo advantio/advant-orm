@@ -171,7 +171,7 @@ public class SqlProcessor {
         boolean idIsNull = false;
         for (ColumnData columnData : columnsData) {
             if (!columnData.isId()) {
-                columns += columnData + ",";
+                columns += columnData.getColumn() + ",";
                 values += "?,";
             }
         }
@@ -181,19 +181,16 @@ public class SqlProcessor {
         pstmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
         int i = 0;
         for (ColumnData columnData : columnsData) {
+            Object value = columnData.getValue();
             if (columnData.isId()) {
-                idIsNull = columnData.getValue() == null;
-            } else {
-                Object value;
-                if (columnData.isVersion()) {
-                    value = 1L;
-                } else {
-                    value = (columnData.getValue() == null) ? "NULL" : "'" + Parser.parse(columnData.getValue()) + "'";
-                }
-                pstmt.setObject(++i, value);
+                idIsNull = (value == null);
+                continue;
+            } else if (columnData.isVersion()) {
+                value = 1L;
             }
+            SqlValue.setStatement(pstmt, ++i, value);
         }
-        pstmt.executeQuery();
+        pstmt.executeUpdate();
         if (idIsNull) {
             ResultSet rs = pstmt.getGeneratedKeys();
             if (rs.next()) {
@@ -202,6 +199,8 @@ public class SqlProcessor {
             rs.close();
         }
     }
+
+
 
     public int update(List<ColumnData> columnsData) throws IllegalAccessException, SQLException {
         String sql = "UPDATE " + reflect.getTable() + " SET ";

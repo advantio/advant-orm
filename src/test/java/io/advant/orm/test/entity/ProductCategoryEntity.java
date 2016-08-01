@@ -16,8 +16,8 @@
 
 package io.advant.orm.test.entity;
 
-import io.advant.orm.annotation.Relation;
 import io.advant.orm.Entity;
+import io.advant.orm.annotation.Relation;
 import io.advant.orm.test.table.ProductCategoryTable;
 
 /**
