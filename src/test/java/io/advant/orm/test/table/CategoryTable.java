@@ -26,33 +26,11 @@ import io.advant.orm.annotation.Table;
 @Table(name = "test_category")
 public class CategoryTable extends AbstractTable {
 
-    @Column(name = "id")
-    private Long id;
-
-    @Column(name = "version")
-    private Long version;
-
     @Column(name = "name")
     private String name;
 
     @Column(name = "description")
     private String description;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
-    }
 
     public String getName() {
         return name;
@@ -73,10 +51,8 @@ public class CategoryTable extends AbstractTable {
     @Override
     public String toString() {
         return "CategoryTable{" +
-                "id=" + id +
-                ", version=" + version +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                '}';
+                "} " + super.toString();
     }
 }

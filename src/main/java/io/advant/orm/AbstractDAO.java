@@ -123,7 +123,7 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
     @Override
 	public int update(T entity) throws OrmException {
 		try {
-			return sqlProcessor.update(fromEntity(entity));
+			return sqlProcessor.update(entity, fromEntity(entity));
 		} catch (SQLException | IllegalAccessException e) {
 			LOGGER.log(Level.SEVERE, e.getMessage(), e);
 			throw new OrmException(e);
@@ -146,7 +146,7 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 			if (id==null) {
 				sqlProcessor.insert(entity, columns);
 			} else {
-                result = sqlProcessor.update(columns);
+                result = sqlProcessor.update(entity, columns);
 			}
             return result;
 		} catch (SQLException | IllegalAccessException | TableParseException | NoSuchFieldException e) {

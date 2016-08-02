@@ -16,6 +16,7 @@
 
 package io.advant.orm.internal;
 
+import io.advant.orm.AbstractTable;
 import io.advant.orm.Entity;
 import io.advant.orm.exception.TableParseException;
 
@@ -134,6 +135,7 @@ public class SqlProcessor {
         String sql = select + from + join + where;
         LOGGER.fine(sql);
         pstmt = connection.prepareStatement(sql);
+        // Adding Conditions statements
         if (conditions != null) {
             int i = 0;
             for (Condition condition : conditions.getList()) {
@@ -200,31 +202,30 @@ public class SqlProcessor {
         rs.close();
     }
 
-
-
-    public int update(List<ColumnData> columnsData) throws IllegalAccessException, SQLException {
+    public <T extends Entity> int update(T entity, List<ColumnData> columnsData) throws IllegalAccessException, SQLException {
         String sql = "UPDATE " + reflect.getTable() + " SET ";
         for (ColumnData columnData : columnsData) {
             if(!columnData.isId()){
                 sql += columnData.getColumn() + " = ?,";
             }
         }
+        sql = sql.substring(0, sql.length()-1);
         sql += " WHERE id = ?";
         pstmt = connection.prepareStatement(sql);
-        Object id = null;
         int i = 0;
         for (ColumnData columnData : columnsData) {
-            if(columnData.isId()){
-                id = columnData.getColumn();
-            } else if (columnData.isVersion()) {
-                Long value = ((Long) columnData.getValue()) + 1L;
-                pstmt.setObject(++i, value);
-            } else {
-                Object value = (columnData.getValue() == null) ? "NULL" : "'" + Parser.parse(columnData.getValue()) + "'";
-                pstmt.setObject(++i, value);
+            if (!columnData.isId()) {
+                if (columnData.isVersion()) {
+                    long version = ((Long) columnData.getValue()) + 1L;
+                    pstmt.setLong(++i, version);
+                    entity.setVersion(version);
+                } else {
+                    SqlValue.setStatement(pstmt, ++i, columnData.getType(), columnData.getValue());
+                }
             }
         }
-        pstmt.setObject(++i, id);
+        long idValue = ((AbstractTable) entity).getLastId();
+        pstmt.setLong(++i, idValue);
         return pstmt.executeUpdate();
     }
 

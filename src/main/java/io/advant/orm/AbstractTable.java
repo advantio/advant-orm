@@ -16,6 +16,8 @@
 
 package io.advant.orm;
 
+import io.advant.orm.annotation.Column;
+
 import java.util.Objects;
 
 /**
@@ -23,13 +25,37 @@ import java.util.Objects;
  */
 public abstract class AbstractTable {
 
-    public abstract Long getId();
+    @Column(name = "id")
+    private Long id;
 
-    public abstract void setId(Long id);
+    @Column(name = "version")
+    private Long version;
 
-    public abstract Long getVersion();
+    private Long lastId;
 
-    public abstract void setVersion(Long id);
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    public Long getLastId() {
+        return lastId;
+    }
+
+    public void setLastId(Long lastId) {
+        this.lastId = lastId;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -42,5 +68,13 @@ public abstract class AbstractTable {
     @Override
     public int hashCode() {
         return Objects.hash(getId());
+    }
+
+    @Override
+    public String toString() {
+        return "AbstractTable{" +
+                "id=" + id +
+                ", version=" + version +
+                '}';
     }
 }

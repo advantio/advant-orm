@@ -26,34 +26,8 @@ import io.advant.orm.annotation.Table;
 @Table(name = "test_brand")
 public class BrandTable extends AbstractTable {
 
-    @Column(name = "id")
-    private Long id;
-
-    @Column(name = "version")
-    private Long version;
-
     @Column(name = "name")
     private String name;
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public Long getVersion() {
-        return version;
-    }
-
-    @Override
-    public void setVersion(Long version) {
-        this.version = version;
-    }
 
     public String getName() {
         return name;
@@ -66,9 +40,7 @@ public class BrandTable extends AbstractTable {
     @Override
     public String toString() {
         return "BrandTable{" +
-                "id=" + id +
-                ", version=" + version +
-                ", name='" + name + '\'' +
-                '}';
+                "name='" + name + '\'' +
+                "} " + super.toString();
     }
 }

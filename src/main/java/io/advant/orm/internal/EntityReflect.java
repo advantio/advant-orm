@@ -34,9 +34,9 @@ public class EntityReflect<T> {
     private static Map<Class<?>, EntityReflect> instance = new HashMap<>();
     private final Class<T> entityClass;
     private final Class<? super T> tableClass;
+    private final Class<? super T> superTableClass;
     private final String table;
-    private Field columnId;
-    private Field columnVersion;
+    private Field idField;
     private Set<JoinData> joins = new HashSet<>();
     private Set<ColumnData> columns = new HashSet<>();
     private Map<Field, Class> joinEntities = new HashMap<>();
@@ -44,6 +44,7 @@ public class EntityReflect<T> {
     private EntityReflect(Class<T> entityClass) throws TableParseException, NoSuchFieldException {
         this.entityClass = entityClass;
         this.tableClass = getTableFromEntity(entityClass);
+        this.superTableClass = tableClass.getSuperclass();
         this.table = tableClass.getAnnotation(Table.class).name();
         parseTable();
         parseEntity();
@@ -83,23 +84,32 @@ public class EntityReflect<T> {
     }
 
     private String getColumnFromTable(Class tableClass, String property) throws NoSuchFieldException {
-        Field field = tableClass.getDeclaredField(property);
+        Field field;
+        if (property.equals("id") || property.equals("version")) {
+            field = tableClass.getSuperclass().getDeclaredField(property);
+        } else {
+            field = tableClass.getDeclaredField(property);
+        }
         field.setAccessible(true);
         return field.getAnnotation(Column.class).name();
     }
 
-    private void parseTable() {
+    private void parseTable() throws NoSuchFieldException {
         for (Field field : tableClass.getDeclaredFields()) {
             field.setAccessible(true);
             Column annotColumn = field.getAnnotation(Column.class);
             String column = annotColumn.name();
-            boolean isId = field.getName().equals("id");
-            boolean isVersion = field.getName().equals("version");
-            if (isId) columnId = field;
-            if (isVersion) columnVersion = field;
-            ColumnData columnData = new ColumnData(isId, isVersion, column, table, field);
+            ColumnData columnData = new ColumnData(false, false, column, table, field);
             columns.add(columnData);
         }
+        idField = superTableClass.getDeclaredField("id");
+        idField.setAccessible(true);
+        ColumnData idColumnData = new ColumnData(true, false, "id", table, idField);
+        columns.add(idColumnData);
+        Field versionField = superTableClass.getDeclaredField("version");
+        versionField.setAccessible(true);
+        ColumnData versionColumnData = new ColumnData(false, true, "version", table, versionField);
+        columns.add(versionColumnData);
     }
 
     public String getColumnFromProperty(String property) throws NoSuchFieldException {
@@ -120,11 +130,7 @@ public class EntityReflect<T> {
     }
 
     public Field getIdField() {
-        return columnId;
-    }
-
-    public Field getVersionField() {
-        return columnVersion;
+        return idField;
     }
 
     public String getTable() {

@@ -23,37 +23,11 @@ import io.advant.orm.annotation.Table;
 @Table(name = "test_product_category")
 public class ProductCategoryTable extends AbstractTable {
 
-    @Column(name = "id")
-    private Long id;
-
-    @Column(name = "version")
-    private Long version;
-
     @Column(name = "product_id")
     private Long productId;
 
     @Column(name = "category_id")
     private Long categoryId;
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public Long getVersion() {
-        return version;
-    }
-
-    @Override
-    public void setVersion(Long version) {
-        this.version = version;
-    }
 
     public Long getProductId() {
         return productId;
@@ -74,10 +48,8 @@ public class ProductCategoryTable extends AbstractTable {
     @Override
     public String toString() {
         return "ProductCategoryTable{" +
-                "id=" + id +
-                ", version=" + version +
-                ", productId=" + productId +
+                "productId=" + productId +
                 ", categoryId=" + categoryId +
-                '}';
+                "} " + super.toString();
     }
 }

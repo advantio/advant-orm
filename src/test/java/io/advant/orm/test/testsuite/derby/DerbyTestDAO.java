@@ -9,7 +9,9 @@ import io.advant.orm.test.testcase.TestDAO;
 import io.advant.orm.type.DBLocalType;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -17,6 +19,7 @@ import java.sql.SQLException;
 /**
  * @author Marco Romagnolo
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DerbyTestDAO {
 
     private static TestDAO test;
@@ -29,13 +32,33 @@ public class DerbyTestDAO {
         test = new TestDAO(connection);
     }
 
-    @Test
-    public void testDAO() throws OrmException {
+    @Test()
+    public void test1_clear() throws OrmException {
         test.clear();
+    }
+
+    @Test
+    public void test2_insert() throws OrmException {
         test.insert();
+    }
+
+    @Test
+    public void test3_findAll() throws OrmException {
         test.findAll();
+    }
+
+    @Test
+    public void test4_find() throws OrmException {
         test.find();
+    }
+
+    @Test
+    public void test5_update() throws OrmException {
         test.update();
+    }
+
+    @Test
+    public void test6_delete() throws OrmException {
         test.delete();
     }
 

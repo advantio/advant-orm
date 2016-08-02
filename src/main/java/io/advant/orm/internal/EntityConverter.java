@@ -16,6 +16,7 @@
 
 package io.advant.orm.internal;
 
+import io.advant.orm.AbstractTable;
 import io.advant.orm.Entity;
 import io.advant.orm.exception.TableParseException;
 
@@ -65,6 +66,7 @@ public class EntityConverter<T extends Entity> {
             while (resultSet.next()) {
                 setEntityJoins(resultSet, entity, entityReflect);
             }
+            ((AbstractTable)entity).setLastId(entity.getId());
         }
         return entity;
     }

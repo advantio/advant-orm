@@ -14,6 +14,7 @@ import io.advant.orm.test.entity.ProductEntity;
 import org.junit.Assert;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -168,7 +169,7 @@ public class TestDAO {
         System.out.println(getClass().getName() + " -> Find all data test");
 
         List<ProductEntity> products = productDAO.findAll();
-        Assert.assertNotNull(products);
+        Assert.assertNotEquals(new ArrayList<>(), products);
         System.out.println(getClass().getName() + " -> Found: " + products);
     }
 
@@ -189,12 +190,14 @@ public class TestDAO {
         Long prevVersion = category.getVersion();
         category.setName("New Category");
         categoryDAO.update(category);
-        Assert.assertEquals(prevVersion.longValue(), category.getVersion() + 1L);
+        Assert.assertEquals(category.getVersion().longValue(), prevVersion + 1L);
         System.out.println(getClass().getName() + " -> Update category: " + category);
 
         ProductEntity product = productDAO.find(1000L);
         product.setId(999L);
         product.setName("New Product");
+        int queryDone = productDAO.update(product);
+        Assert.assertEquals(queryDone, 1);
         System.out.println(getClass().getName() + " -> Update product: " + product);
     }
 

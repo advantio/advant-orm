@@ -25,12 +25,6 @@ import java.util.Date;
 @Table(name = "test_product")
 public class ProductTable extends AbstractTable {
 
-    @Column(name = "id")
-    private Long id;
-
-    @Column(name = "version")
-    private Long version;
-
     @Column(name = "blocked")
     private boolean blocked;
 
@@ -48,26 +42,6 @@ public class ProductTable extends AbstractTable {
 
     @Column(name = "modify_date")
     private Date modifyDate;
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public Long getVersion() {
-        return version;
-    }
-
-    @Override
-    public void setVersion(Long version) {
-        this.version = version;
-    }
 
     public boolean isBlocked() {
         return blocked;
@@ -120,14 +94,12 @@ public class ProductTable extends AbstractTable {
     @Override
     public String toString() {
         return "ProductTable{" +
-                "id=" + id +
-                ", version=" + version +
-                ", blocked=" + blocked +
+                "blocked=" + blocked +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", brandId='" + brandId + '\'' +
+                ", brandId=" + brandId +
                 ", createDate=" + createDate +
                 ", modifyDate=" + modifyDate +
-                '}';
+                "} " + super.toString();
     }
 }
