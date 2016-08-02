@@ -23,4 +23,9 @@ import io.advant.orm.test.table.CategoryTable;
  *
  */
 public class CategoryEntity extends CategoryTable implements Entity {
+
+    @Override
+    public String toString() {
+        return "CategoryEntity{} " + super.toString();
+    }
 }

@@ -87,10 +87,8 @@ public class Conditions {
     }
 
     private void iterateConditions(StringBuilder sb, List<Condition> conditions) {
-        Iterator<Condition> iterator = conditions.iterator();
         boolean isFirst = true;
-        while (iterator.hasNext()) {
-            Condition condition = iterator.next();
+        for (Condition condition : conditions) {
             if (isFirst) {
                 sb.append(condition);
             } else {
@@ -102,10 +100,8 @@ public class Conditions {
 
     public String asSQL() {
         final StringBuilder sb = new StringBuilder();
-        Iterator<ConditionPool> iterator = pools.iterator();
         boolean isFirst = true;
-        while (iterator.hasNext()) {
-            ConditionPool pool = iterator.next();
+        for (ConditionPool pool : pools) {
             recursivePool(sb, isFirst, pool);
             isFirst = false;
         }

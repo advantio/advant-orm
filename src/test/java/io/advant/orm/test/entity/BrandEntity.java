@@ -23,5 +23,9 @@ import io.advant.orm.test.table.BrandTable;
  *
  */
 public class BrandEntity extends BrandTable implements Entity {
-    
+
+    @Override
+    public String toString() {
+        return "BrandEntity{} " + super.toString();
+    }
 }

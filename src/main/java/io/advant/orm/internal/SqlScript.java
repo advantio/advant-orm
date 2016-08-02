@@ -24,17 +24,13 @@ package io.advant.orm.internal;
 
 import java.io.*;
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Tool to run database scripts
  */
-public class ScriptRunner {
+public class SqlScript {
 
     private final Connection connection;
     private final boolean stopOnError;
@@ -44,7 +40,7 @@ public class ScriptRunner {
     /**
      * Default constructor
      */
-    public ScriptRunner(Connection connection, boolean autoCommit, boolean stopOnError) {
+    public SqlScript(Connection connection, boolean autoCommit, boolean stopOnError) {
         this.connection = connection;
         this.autoCommit = autoCommit;
         this.stopOnError = stopOnError;
@@ -55,14 +51,14 @@ public class ScriptRunner {
      *
      * @param reader - the source of the script
      */
-    public void runScript(Reader reader) throws IOException, SQLException {
+    public void run(Reader reader) throws IOException, SQLException {
         try {
             boolean originalAutoCommit = connection.getAutoCommit();
             try {
                 if (originalAutoCommit != this.autoCommit) {
                     connection.setAutoCommit(this.autoCommit);
                 }
-                runScript(connection, reader);
+                run(connection, reader);
             } finally {
                 connection.setAutoCommit(originalAutoCommit);
             }
@@ -82,9 +78,8 @@ public class ScriptRunner {
      * @throws SQLException if any SQL errors occur
      * @throws IOException if there is an error reading from the Reader
      */
-    private void runScript(Connection conn, Reader reader) throws IOException, SQLException {
+    private void run(Connection conn, Reader reader) throws IOException, SQLException {
         StringBuffer command = null;
-        Statement statement = null;
         try {
             LineNumberReader lineReader = new LineNumberReader(reader);
             String line;
@@ -93,15 +88,15 @@ public class ScriptRunner {
                     command = new StringBuffer();
                 }
                 String trimmedLine = line.trim();
-                if (trimmedLine.length() < 1 || trimmedLine.startsWith("//") || trimmedLine.startsWith("--")) {
-                    // Do nothing
-                } else if (!trimmedLine.isEmpty() && trimmedLine.endsWith(delimiter)) {
-                    command.append(line.substring(0, line.lastIndexOf(delimiter)));
-                    command.append(" ");
-                    execCommand(conn, command, lineReader);
-                    command = null;
-                } else {
-                    command.append(line);
+                if (trimmedLine.length() >= 1 && !trimmedLine.startsWith("//") && !trimmedLine.startsWith("--")) {
+                    if (!trimmedLine.isEmpty() && trimmedLine.endsWith(delimiter)) {
+                        command.append(line.substring(0, line.lastIndexOf(delimiter)));
+                        command.append(" ");
+                        execCommand(conn, command, lineReader);
+                        command = null;
+                    } else {
+                        command.append(line);
+                    }
                 }
             }
             if (!autoCommit) {

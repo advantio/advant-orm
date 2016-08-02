@@ -22,7 +22,6 @@ import io.advant.orm.exception.TableParseException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.StringReader;
 import java.sql.*;
 import java.util.*;
 import java.util.logging.Level;
@@ -46,9 +45,9 @@ public class SqlProcessor {
     }
 
     public static boolean runScript(Connection connection, InputStream input) throws SQLException{
-        ScriptRunner s = new ScriptRunner(connection, true, true);
+        SqlScript s = new SqlScript(connection, true, true);
         try {
-            s.runScript(new InputStreamReader(input));
+            s.run(new InputStreamReader(input));
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
@@ -168,12 +167,12 @@ public class SqlProcessor {
         String sql = "INSERT INTO " + reflect.getTable();
         String columns = " (";
         String values = " (";
-        boolean idIsNull = false;
         for (ColumnData columnData : columnsData) {
-            if (!columnData.isId()) {
-                columns += columnData.getColumn() + ",";
-                values += "?,";
+            if (columnData.isId() && columnData.getValue() == null) {
+                continue;
             }
+            columns += columnData.getColumn() + ",";
+            values += "?,";
         }
         columns = columns.substring(0, columns.length()-1) + ")";
         values = values.substring(0, values.length()-1) + ")";
@@ -182,22 +181,23 @@ public class SqlProcessor {
         int i = 0;
         for (ColumnData columnData : columnsData) {
             Object value = columnData.getValue();
-            if (columnData.isId()) {
-                idIsNull = (value == null);
+            Class<?> type = columnData.getType();
+            if (columnData.isId() && columnData.getValue() == null) {
                 continue;
             } else if (columnData.isVersion()) {
                 value = 1L;
             }
-            SqlValue.setStatement(pstmt, ++i, value);
+            SqlValue.setStatement(pstmt, ++i, type, value);
         }
+        entity.setVersion(1L);
         pstmt.executeUpdate();
-        if (idIsNull) {
-            ResultSet rs = pstmt.getGeneratedKeys();
+        ResultSet rs = pstmt.getGeneratedKeys();
+        if (entity.getId() == null) {
             if (rs.next()) {
                 entity.setId(rs.getLong(1));
             }
-            rs.close();
         }
+        rs.close();
     }
 
 

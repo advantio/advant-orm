@@ -75,7 +75,7 @@ public class Condition {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        sb.append(table).append(".").append(column).append(op).append(value);
+        sb.append(table).append(".").append(column).append(op).append("?");
         return sb.toString();
     }
 }

@@ -35,4 +35,11 @@ public class ProductCategoryEntity extends ProductCategoryTable implements Entit
     public void setCategory(CategoryEntity category) {
         this.category = category;
     }
+
+    @Override
+    public String toString() {
+        return "ProductCategoryEntity{" +
+                "category=" + category +
+                "} " + super.toString();
+    }
 }

@@ -30,7 +30,7 @@ public class DerbyDropDB {
     }
 
     @Test
-    public void create() throws ConnectionException, OrmException {
+    public void drop() throws ConnectionException, OrmException {
         test.drop("DERBY");
     }
 

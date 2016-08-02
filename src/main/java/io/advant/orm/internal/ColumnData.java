@@ -28,6 +28,7 @@ public class ColumnData {
     private final String column;
     private final Field field;
     private final String table;
+    private final Class<?> type;
     private Object value;
 
     public ColumnData(boolean id, boolean version, String column, String table, Field field) {
@@ -36,6 +37,7 @@ public class ColumnData {
         this.column = column;
         this.table = table;
         this.field = field;
+        this.type = field.getType();
     }
 
     public boolean isId() {
@@ -62,8 +64,11 @@ public class ColumnData {
         return value;
     }
 
+    public Class<?> getType() {
+        return type;
+    }
+
     public void setValue(Object value) {
         this.value = value;
     }
-
 }

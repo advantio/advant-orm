@@ -151,34 +151,49 @@ public class EntityConverter<T extends Entity> {
             field.setAccessible(true);
             String columnName = getColumnName(columnData.getTable(), columnData.getColumn());
             Class<?> type = field.getType();
-            Object value = resultSet.getObject(columnName);
             if (type == Integer.class) {
-                field.setInt(currentEntity, (Integer) value);
+                int value = resultSet.getInt(columnName);
+                field.set(currentEntity, value == 0 ? null : value);
             } else if (type == Short.class) {
-                field.setShort(currentEntity, (Short) value);
+                short value = resultSet.getShort(columnName);
+                field.set(currentEntity, value == 0 ? null : value);
             } else if (type == Long.class) {
-                field.setLong(currentEntity, (Long) value);
-            } else if (type == Boolean.class || type == boolean.class) {
-                field.setBoolean(currentEntity, (Boolean) value);
+                long value = resultSet.getLong(columnName);
+                field.set(currentEntity, value == 0L ? null : value);
+            } else if (type == Boolean.class) {
+                Object value = resultSet.getObject(columnName);
+                field.set(currentEntity, value);
+            } else if (type == boolean.class) {
+                boolean value = resultSet.getBoolean(columnName);
+                field.setBoolean(currentEntity, value);
             } else if (type == Float.class) {
-                field.setFloat(currentEntity, (Float) value);
+                float value = resultSet.getFloat(columnName);
+                field.set(currentEntity, value == 0 ? null : value);
             } else if (type == Double.class) {
-                field.setDouble(currentEntity, (Double) value);
+                double value = resultSet.getDouble(columnName);
+                field.set(currentEntity, value == 0 ? null : value);
             } else if (type == String.class) {
+                String value = resultSet.getString(columnName);
                 field.set(currentEntity, value);
             } else if (type == Date.class) {
+                Date value = resultSet.getDate(columnName);
                 field.set(currentEntity, value);
             } else if (type == Calendar.class) {
+                Date date = resultSet.getDate(columnName);
+                Calendar value = Calendar.getInstance();
+                value.setTime(date);
                 field.set(currentEntity, value);
             } else if (type == BigDecimal.class) {
+                BigDecimal value = resultSet.getBigDecimal(columnName);
                 field.set(currentEntity, value);
-            } else if (type == Character.class) {
-                field.setChar(currentEntity, (Character) value);
             } else if (type == Byte.class) {
-                field.setByte(currentEntity, (Byte) value);
+                Byte value = resultSet.getByte(columnName);
+                field.setByte(currentEntity, value);
             } else if (type == InputStream.class) {
+                InputStream value = resultSet.getBinaryStream(columnName);
                 field.set(currentEntity, value);
             } else if (type == Reader.class) {
+                Reader value = resultSet.getCharacterStream(columnName);
                 field.set(currentEntity, value);
             }
         }

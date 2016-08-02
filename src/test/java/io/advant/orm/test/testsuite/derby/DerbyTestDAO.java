@@ -33,8 +33,8 @@ public class DerbyTestDAO {
     public void testDAO() throws OrmException {
         test.clear();
         test.insert();
-        test.find();
         test.findAll();
+        test.find();
         test.update();
         test.delete();
     }

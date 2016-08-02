@@ -51,7 +51,7 @@ public class ProductEntity extends ProductTable implements Entity {
 
     @Override
     public String toString() {
-        return "UserEntity{" +
+        return "ProductEntity{" +
                 "brand=" + brand +
                 ", " + super.toString() +
                 '}';
