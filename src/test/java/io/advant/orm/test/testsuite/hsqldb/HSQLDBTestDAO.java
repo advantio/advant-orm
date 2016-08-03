@@ -1,4 +1,4 @@
-package io.advant.orm.test.testsuite.derby;
+package io.advant.orm.test.testsuite.hsqldb;
 
 import io.advant.orm.DB;
 import io.advant.orm.DBLocalParams;
@@ -21,15 +21,15 @@ import java.sql.SQLException;
  * @author Marco Romagnolo
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class DerbyTestDAO {
+public class HSQLDBTestDAO {
 
     private static TestDAO test;
 
     @BeforeClass
     public static void configure() throws ConnectionException {
-        PrintUtil.suite(DerbyTestDAO.class.getName());
-        DefaultParams defaultParams = new DefaultParams("memory:" + DefaultParams.DATABASE + ";create=true;user=test;password=test");
-        DBLocalParams params = defaultParams.getDBLocalParams(DBLocalType.DERBY);
+        PrintUtil.suite(HSQLDBTestDAO.class.getName());
+        DefaultParams defaultParams = new DefaultParams("mem:" + DefaultParams.DATABASE);
+        DBLocalParams params = defaultParams.getDBLocalParams(DBLocalType.HSQLDB);
         Connection connection = DB.newInstance(params, defaultParams.getEntities()).getConnection();
         test = new TestDAO(connection);
     }

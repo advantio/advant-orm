@@ -183,13 +183,12 @@ public class SqlProcessor {
         int i = 0;
         for (ColumnData columnData : columnsData) {
             Object value = columnData.getValue();
-            Class<?> type = columnData.getType();
             if (columnData.isId() && columnData.getValue() == null) {
                 continue;
             } else if (columnData.isVersion()) {
                 value = 1L;
             }
-            SqlValue.setStatement(pstmt, ++i, type, value);
+            ValueBridge.setStatement(pstmt, ++i, columnData.getValueType(), value);
         }
         entity.setVersion(1L);
         pstmt.executeUpdate();
@@ -220,7 +219,7 @@ public class SqlProcessor {
                     pstmt.setLong(++i, version);
                     entity.setVersion(version);
                 } else {
-                    SqlValue.setStatement(pstmt, ++i, columnData.getType(), columnData.getValue());
+                    ValueBridge.setStatement(pstmt, ++i, columnData.getValueType(), columnData.getValue());
                 }
             }
         }

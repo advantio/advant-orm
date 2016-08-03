@@ -18,9 +18,9 @@ import java.util.Set;
 public class DefaultParams {
 
     public static final String HOST = "localhost";
-    public static final String DATABASE = "advant_orm";
-    public static final String USER = "test";
-    public static final String PASSWORD = "test";
+    public static final String DATABASE = "advantorm";
+    public static final String USER = "advantorm";
+    public static final String PASSWORD = "advantorm";
 
     private String database;
     private HashSet<String> entities;

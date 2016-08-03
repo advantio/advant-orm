@@ -19,6 +19,7 @@ public class TestCreateDB {
     }
 
     public void create(String fileName) throws ConnectionException, OrmException {
+        PrintUtil.test("Create database/tables");
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream("sql/" + fileName + "/create.sql");
         Query.runScript(connection, inputStream);
     }

@@ -1,12 +1,14 @@
-package io.advant.orm.test.testsuite.derby;
+package io.advant.orm.test.testsuite.postgresql;
 
 import io.advant.orm.DB;
+import io.advant.orm.DBHostParams;
 import io.advant.orm.DBLocalParams;
 import io.advant.orm.exception.ConnectionException;
 import io.advant.orm.exception.OrmException;
 import io.advant.orm.test.testcase.DefaultParams;
 import io.advant.orm.test.testcase.PrintUtil;
 import io.advant.orm.test.testcase.TestDropDB;
+import io.advant.orm.type.DBHostType;
 import io.advant.orm.type.DBLocalType;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -18,22 +20,22 @@ import java.sql.SQLException;
 /**
  * @author Marco Romagnolo
  */
-public class DerbyDropDB {
+public class PostgresqlDropDB {
 
     private static TestDropDB test;
 
     @BeforeClass
     public static void connect() throws ConnectionException {
-        PrintUtil.suite(DerbyDropDB.class.getName());
-        DefaultParams defaultParams = new DefaultParams("memory:" + DefaultParams.DATABASE + ";create=true;user=test;password=test");
-        DBLocalParams params = defaultParams.getDBLocalParams(DBLocalType.DERBY);
+        PrintUtil.suite(PostgresqlDropDB.class.getName());
+        DefaultParams defaultParams = new DefaultParams();
+        DBHostParams params = defaultParams.getDBHostParams(DBHostType.POSTGRESQL, 5432);
         Connection connection = DB.newInstance(params, defaultParams.getEntities()).getConnection();
         test = new TestDropDB(connection);
     }
 
     @Test
     public void drop() throws ConnectionException, OrmException {
-        test.drop("DERBY");
+        test.drop("POSTGRESQL");
     }
 
     @AfterClass

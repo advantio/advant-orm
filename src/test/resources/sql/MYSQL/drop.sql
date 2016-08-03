@@ -1,4 +1,4 @@
---Drop Tables
+-- Drop Tables
 
 DROP TABLE IF EXISTS test_basket CASCADE ;
 DROP TABLE IF EXISTS test_brand;
@@ -9,4 +9,4 @@ DROP TABLE IF EXISTS test_shop;
 
 -- Drop Database
 
-DROP DATABASE IF EXISTS advant_orm;
+DROP DATABASE IF EXISTS advantorm;

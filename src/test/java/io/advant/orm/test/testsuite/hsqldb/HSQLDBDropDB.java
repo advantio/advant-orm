@@ -1,4 +1,4 @@
-package io.advant.orm.test.testsuite.derby;
+package io.advant.orm.test.testsuite.hsqldb;
 
 import io.advant.orm.DB;
 import io.advant.orm.DBLocalParams;
@@ -18,22 +18,22 @@ import java.sql.SQLException;
 /**
  * @author Marco Romagnolo
  */
-public class DerbyDropDB {
+public class HSQLDBDropDB {
 
     private static TestDropDB test;
 
     @BeforeClass
     public static void connect() throws ConnectionException {
-        PrintUtil.suite(DerbyDropDB.class.getName());
-        DefaultParams defaultParams = new DefaultParams("memory:" + DefaultParams.DATABASE + ";create=true;user=test;password=test");
-        DBLocalParams params = defaultParams.getDBLocalParams(DBLocalType.DERBY);
+        PrintUtil.suite(HSQLDBDropDB.class.getName());
+        DefaultParams defaultParams = new DefaultParams("mem:" + DefaultParams.DATABASE);
+        DBLocalParams params = defaultParams.getDBLocalParams(DBLocalType.HSQLDB);
         Connection connection = DB.newInstance(params, defaultParams.getEntities()).getConnection();
         test = new TestDropDB(connection);
     }
 
     @Test
     public void drop() throws ConnectionException, OrmException {
-        test.drop("DERBY");
+        test.drop("HSQLDB");
     }
 
     @AfterClass

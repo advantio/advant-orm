@@ -1,4 +1,4 @@
-package io.advant.orm.test.testsuite.derby;
+package io.advant.orm.test.testsuite.h2;
 
 import io.advant.orm.DB;
 import io.advant.orm.DBLocalParams;
@@ -6,7 +6,7 @@ import io.advant.orm.exception.ConnectionException;
 import io.advant.orm.exception.OrmException;
 import io.advant.orm.test.testcase.DefaultParams;
 import io.advant.orm.test.testcase.PrintUtil;
-import io.advant.orm.test.testcase.TestDropDB;
+import io.advant.orm.test.testcase.TestCreateDB;
 import io.advant.orm.type.DBLocalType;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -18,26 +18,27 @@ import java.sql.SQLException;
 /**
  * @author Marco Romagnolo
  */
-public class DerbyDropDB {
+public class H2CreateDB {
 
-    private static TestDropDB test;
+    private static TestCreateDB test;
 
     @BeforeClass
     public static void connect() throws ConnectionException {
-        PrintUtil.suite(DerbyDropDB.class.getName());
-        DefaultParams defaultParams = new DefaultParams("memory:" + DefaultParams.DATABASE + ";create=true;user=test;password=test");
-        DBLocalParams params = defaultParams.getDBLocalParams(DBLocalType.DERBY);
+        PrintUtil.suite(H2CreateDB.class.getName());
+        DefaultParams defaultParams = new DefaultParams("mem:" + DefaultParams.DATABASE + ";DB_CLOSE_DELAY=-1");
+        DBLocalParams params = defaultParams.getDBLocalParams(DBLocalType.H2);
         Connection connection = DB.newInstance(params, defaultParams.getEntities()).getConnection();
-        test = new TestDropDB(connection);
+        test = new TestCreateDB(connection);
     }
 
     @Test
-    public void drop() throws ConnectionException, OrmException {
-        test.drop("DERBY");
+    public void create() throws ConnectionException, OrmException {
+        test.create("H2");
     }
 
     @AfterClass
     public static void disconnect() throws ConnectionException, SQLException {
         DB.getInstance().disconnect();
     }
+
 }

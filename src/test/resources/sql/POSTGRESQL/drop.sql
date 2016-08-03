@@ -1,5 +1,5 @@
 -- Drop Database
-DROP DATABASE IF EXISTS advant_orm;
+DROP DATABASE IF EXISTS advantorm;
 
 --Drop Tables
 DROP TABLE IF EXISTS test_brand CASCADE ;

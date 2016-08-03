@@ -1,12 +1,8 @@
 --Drop Tables
 
-DROP TABLE IF EXISTS test_basket CASCADE ;
-DROP TABLE IF EXISTS test_brand;
-DROP TABLE IF EXISTS test_category;
-DROP TABLE IF EXISTS test_product_category;
-DROP TABLE IF EXISTS test_product;
-DROP TABLE IF EXISTS test_shop;
-
--- Drop Database
-
-DROP DATABASE IF EXISTS advant_orm;
+DROP TABLE test_basket;
+DROP TABLE test_brand;
+DROP TABLE test_category;
+DROP TABLE test_product_category;
+DROP TABLE test_product;
+DROP TABLE test_shop;

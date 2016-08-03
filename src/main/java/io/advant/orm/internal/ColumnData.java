@@ -16,6 +16,8 @@
 
 package io.advant.orm.internal;
 
+import io.advant.orm.type.ValueType;
+
 import java.lang.reflect.Field;
 
 /**
@@ -29,6 +31,7 @@ public class ColumnData {
     private final Field field;
     private final String table;
     private final Class<?> type;
+    private ValueType valueType;
     private Object value;
 
     public ColumnData(boolean id, boolean version, String column, String table, Field field) {
@@ -38,6 +41,11 @@ public class ColumnData {
         this.table = table;
         this.field = field;
         this.type = field.getType();
+        for (ValueType valueType : ValueType.values()) {
+            if (valueType.getType() == type) {
+                this.valueType = valueType;
+            }
+        }
     }
 
     public boolean isId() {
@@ -66,6 +74,10 @@ public class ColumnData {
 
     public Class<?> getType() {
         return type;
+    }
+
+    public ValueType getValueType() {
+        return valueType;
     }
 
     public void setValue(Object value) {
