@@ -28,7 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * @author Marco Romagnolo
  */
 public class DB {
 
@@ -66,20 +66,33 @@ public class DB {
             if (connection == null || connection.isClosed()) {
                 connection = connect();
             }
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
             throw new ConnectionException(e);
         }
         return connection;
     }
 
-    private Connection connect() throws ClassNotFoundException, SQLException {
+    public static boolean isConnected() {
+        try {
+            return instance.connection != null && !instance.connection.isClosed();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            return false;
+        }
+    }
+
+    private Connection connect() throws SQLException {
         connection = DriverManager.getConnection(params.getUri(), params.getProperties());
         return connection;
     }
 
-    public void disconnect() throws SQLException {
+    public void disconnect() {
         if (connection!=null) {
-            connection.close();
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            }
         }
     }
 }

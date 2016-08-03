@@ -37,7 +37,7 @@ public class HSQLDBDropDB {
     }
 
     @AfterClass
-    public static void disconnect() throws ConnectionException, SQLException {
+    public static void disconnect() throws ConnectionException {
         DB.getInstance().disconnect();
     }
 }

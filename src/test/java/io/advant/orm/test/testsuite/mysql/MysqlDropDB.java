@@ -11,6 +11,7 @@ import io.advant.orm.test.testcase.TestDropDB;
 import io.advant.orm.type.DBHostType;
 import io.advant.orm.type.DBLocalType;
 import org.junit.AfterClass;
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -25,11 +26,17 @@ public class MysqlDropDB {
     private static TestDropDB test;
 
     @BeforeClass
-    public static void connect() throws ConnectionException {
+    public static void connect() {
         PrintUtil.suite(MysqlDropDB.class.getName());
         DefaultParams defaultParams = new DefaultParams();
         DBHostParams params = defaultParams.getDBHostParams(DBHostType.MYSQL, 3306);
-        Connection connection = DB.newInstance(params, defaultParams.getEntities()).getConnection();
+        Connection connection = null;
+        try {
+            connection = DB.newInstance(params, defaultParams.getEntities()).getConnection();
+        } catch (ConnectionException e) {
+            System.out.println("Connection to Mysql database is not available [not mandatory]");
+            Assume.assumeTrue(false);
+        }
         test = new TestDropDB(connection);
     }
 
@@ -39,7 +46,7 @@ public class MysqlDropDB {
     }
 
     @AfterClass
-    public static void disconnect() throws ConnectionException, SQLException {
+    public static void disconnect() throws ConnectionException {
         DB.getInstance().disconnect();
     }
 }

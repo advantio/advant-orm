@@ -11,6 +11,7 @@ import io.advant.orm.test.testcase.TestCreateDB;
 import io.advant.orm.type.DBHostType;
 import io.advant.orm.type.DBLocalType;
 import org.junit.AfterClass;
+import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -29,7 +30,13 @@ public class PostgresqlCreateDB {
         PrintUtil.suite(PostgresqlCreateDB.class.getName());
         DefaultParams defaultParams = new DefaultParams();
         DBHostParams params = defaultParams.getDBHostParams(DBHostType.POSTGRESQL, 5432);
-        Connection connection = DB.newInstance(params, defaultParams.getEntities()).getConnection();
+        Connection connection = null;
+        try {
+            connection = DB.newInstance(params, defaultParams.getEntities()).getConnection();
+        } catch (ConnectionException e) {
+            System.out.println("Connection to Postgresql database is not available [not mandatory]");
+            Assume.assumeTrue(false);
+        }
         test = new TestCreateDB(connection);
     }
 
@@ -39,7 +46,7 @@ public class PostgresqlCreateDB {
     }
 
     @AfterClass
-    public static void disconnect() throws ConnectionException, SQLException {
+    public static void disconnect() throws ConnectionException {
         DB.getInstance().disconnect();
     }
 
