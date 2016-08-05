@@ -51,4 +51,8 @@ public class DefaultParams {
         return new DBHostParams(dbType, HOST, port, database, USER, PASSWORD);
     }
 
+    public DBHostParams getDBHostParams(DBHostType dbType, int port, String service) {
+        return new DBHostParams(dbType, HOST, port, service, USER, PASSWORD);
+    }
+
 }

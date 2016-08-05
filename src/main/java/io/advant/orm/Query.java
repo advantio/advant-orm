@@ -1,6 +1,8 @@
 package io.advant.orm;
 
 import io.advant.orm.exception.OrmException;
+import io.advant.orm.internal.ExecuteBatch;
+import io.advant.orm.internal.ExecuteUpdate;
 import io.advant.orm.internal.SqlProcessor;
 
 import java.io.ByteArrayOutputStream;
@@ -18,38 +20,73 @@ public class Query {
 
     private static final Logger LOGGER = Logger.getLogger(Query.class.getName());
 
-    public static void runScript(Connection connection, InputStream inputStream) throws OrmException {
+    public static void run(Connection connection, String sql) throws OrmException {
         try {
-            if (inputStream!=null) {
-                SqlProcessor.runScript(connection, inputStream);
-            }
+            ExecuteUpdate.run(connection, sql);
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
             throw new OrmException(e);
         }
     }
 
-    public static int[] exec(Connection connection, String queries[]) throws OrmException {
+    public static void call(Connection connection, String sql) throws OrmException {
         try {
-            return SqlProcessor.execBatch(connection, queries);
+            ExecuteUpdate.call(connection, sql);
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
             throw new OrmException(e);
         }
     }
 
-    public static int[] exec(Connection connection, String query, Object[][] values) throws OrmException {
+    public static void run(Connection connection, InputStream inputStream, boolean exitOnError) throws OrmException {
         try {
-            return SqlProcessor.execBatch(connection, query, values);
+            String[] array = streamToString(inputStream).split("[\\r\\n]");
+            ExecuteUpdate.runScript(connection, array, exitOnError);
+        } catch (IOException | SQLException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            throw new OrmException(e);
+        }
+    }
+
+    public static void call(Connection connection, InputStream inputStream) throws OrmException {
+        try {
+            ExecuteUpdate.call(connection, streamToString(inputStream));
+        } catch (IOException | SQLException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            throw new OrmException(e);
+        }
+    }
+
+    public static int[] batch(Connection connection, String separator, InputStream inputStream) throws OrmException {
+        try {
+            return ExecuteBatch.run(connection, streamToString(inputStream).split(separator));
+        } catch (IOException | SQLException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            throw new OrmException(e);
+        }
+    }
+
+    public static int[] batch(Connection connection, String queries[]) throws OrmException {
+        try {
+            return ExecuteBatch.run(connection, queries);
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
             throw new OrmException(e);
         }
     }
 
-    public static int[] call(Connection connection, String query, Object values[][]) throws OrmException {
+    public static int[] batch(Connection connection, String query, Object[][] values) throws OrmException {
         try {
-            return SqlProcessor.callBatch(connection, query, values);
+            return ExecuteBatch.run(connection, query, values);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            throw new OrmException(e);
+        }
+    }
+
+    public static int[] callBatch(Connection connection, String query, Object values[][]) throws OrmException {
+        try {
+            return ExecuteBatch.call(connection, query, values);
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
             throw new OrmException(e);

@@ -145,7 +145,7 @@ public class EntityConverter<T extends Entity> {
         for (ColumnData columnData : columns) {
             Field field = columnData.getField();
             field.setAccessible(true);
-            String columnName = getColumnName(columnData.getTable(), columnData.getColumn());
+            String columnName = getColumnName(columnData.getTableIndex(), columnData.getColumn());
             ValueBridge.setField(currentEntity, field, columnData.getValueType(), columnName, resultSet);
         }
     }
@@ -196,12 +196,12 @@ public class EntityConverter<T extends Entity> {
 
     /**
      * Return the name of table column
-     * @param table String name of a table
+     * @param tableIndex String table index loaded from <code>EntityReflect</code>
      * @param column String name of a column
      * @return String composed with table_column
      */
-    public String getColumnName(String table, String column) {
-        return table + "_" + column;
+    public String getColumnName(String tableIndex, String column) {
+        return tableIndex + "_" + column;
     }
 
     /**
@@ -213,7 +213,7 @@ public class EntityConverter<T extends Entity> {
      */
     public Long getIdValue(EntityReflect reflect, ResultSet resultSet) throws SQLException {
         Field idField = reflect.getIdField();
-        String idColumn = getColumnName(reflect.getTable(), idField.getName());
+        String idColumn = getColumnName(reflect.getTableIndex(), idField.getName());
         return resultSet.getLong(idColumn);
     }
 }

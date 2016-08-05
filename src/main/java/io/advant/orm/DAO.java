@@ -28,10 +28,6 @@ public interface DAO<T> {
 
     int truncate(boolean force) throws OrmException;
 
-    int exec(String sql) throws OrmException;
-
-    ResultSet call(String sql) throws OrmException;
-
     void insert(T entity) throws OrmException;
 
     int update(T entity) throws OrmException;

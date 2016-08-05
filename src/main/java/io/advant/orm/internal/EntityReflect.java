@@ -32,7 +32,9 @@ import java.util.*;
 public class EntityReflect<T> {
 
     private static Map<Class<?>, EntityReflect> instance = new HashMap<>();
+    private static int num = 0;
     private final Class<T> entityClass;
+    private final String tableIndex;
     private final Class<? super T> tableClass;
     private final Class<? super T> superTableClass;
     private final String table;
@@ -41,8 +43,9 @@ public class EntityReflect<T> {
     private Set<ColumnData> columns = new HashSet<>();
     private Map<Field, Class> joinEntities = new HashMap<>();
 
-    private EntityReflect(Class<T> entityClass) throws TableParseException, NoSuchFieldException {
+    private EntityReflect(Class<T> entityClass, int tableIndex) throws TableParseException, NoSuchFieldException {
         this.entityClass = entityClass;
+        this.tableIndex = "t" + tableIndex;
         this.tableClass = getTableFromEntity(entityClass);
         this.superTableClass = tableClass.getSuperclass();
         this.table = tableClass.getAnnotation(Table.class).name();
@@ -53,7 +56,7 @@ public class EntityReflect<T> {
     public static <T> EntityReflect<T> getInstance(Class<T> clazz) throws TableParseException, NoSuchFieldException {
         EntityReflect<T> current = instance.get(clazz);
         if (current==null) {
-            current = new EntityReflect<>(clazz);
+            current = new EntityReflect<>(clazz, ++num);
             instance.put(clazz, current) ;
         }
         return current;
@@ -99,16 +102,16 @@ public class EntityReflect<T> {
             field.setAccessible(true);
             Column annotColumn = field.getAnnotation(Column.class);
             String column = annotColumn.name();
-            ColumnData columnData = new ColumnData(false, false, column, table, field);
+            ColumnData columnData = new ColumnData(false, false, column, table, tableIndex, field);
             columns.add(columnData);
         }
         idField = superTableClass.getDeclaredField("id");
         idField.setAccessible(true);
-        ColumnData idColumnData = new ColumnData(true, false, "id", table, idField);
+        ColumnData idColumnData = new ColumnData(true, false, "id", table, tableIndex, idField);
         columns.add(idColumnData);
         Field versionField = superTableClass.getDeclaredField("version");
         versionField.setAccessible(true);
-        ColumnData versionColumnData = new ColumnData(false, true, "version", table, versionField);
+        ColumnData versionColumnData = new ColumnData(false, true, "version", table, tableIndex, versionField);
         columns.add(versionColumnData);
     }
 
@@ -135,6 +138,10 @@ public class EntityReflect<T> {
 
     public String getTable() {
         return table;
+    }
+
+    public String getTableIndex() {
+        return tableIndex;
     }
 
     public Set<JoinData> getJoins() {

@@ -204,6 +204,14 @@
             <version>3.8.11.2</version>
             <scope>test</scope>
         </dependency>
+        <!-- Oracle -->
+        <dependency>
+            <groupId>oracle</groupId>
+            <artifactId>com.oracle</artifactId>
+            <version>11.2.0.4.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/test/resources/driver/ojdbc6.jar</systemPath>
+        </dependency>
 	</dependencies>
 
 </project>

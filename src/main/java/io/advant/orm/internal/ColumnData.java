@@ -30,15 +30,17 @@ public class ColumnData {
     private final String column;
     private final Field field;
     private final String table;
+    private final String tableIndex;
     private final Class<?> type;
     private ValueType valueType;
     private Object value;
 
-    public ColumnData(boolean id, boolean version, String column, String table, Field field) {
+    public ColumnData(boolean id, boolean version, String column, String table, String tableIndex, Field field) {
         this.id = id;
         this.version = version;
         this.column = column;
         this.table = table;
+        this.tableIndex = tableIndex;
         this.field = field;
         this.type = field.getType();
         for (ValueType valueType : ValueType.values()) {
@@ -62,6 +64,10 @@ public class ColumnData {
 
     public String getTable() {
         return table;
+    }
+
+    public String getTableIndex() {
+        return tableIndex;
     }
 
     public Field getField() {

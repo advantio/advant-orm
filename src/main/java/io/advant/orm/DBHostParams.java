@@ -53,7 +53,7 @@ public class DBHostParams extends AbstractParams {
                 setUri("jdbc:jtds:sybase://" + host + ":" + port + "/" + database);
                 break;
             case ORACLE:
-                setUri("jdbc:oracle:thin:@" + host + ":" + port + "/" + database);
+                setUri("jdbc:oracle:thin:@" + host + ":" + port + ":" + database);
                 break;
         }
     }

@@ -1,7 +1,6 @@
 package io.advant.orm.test.testcase;
 
 import io.advant.orm.Query;
-import io.advant.orm.exception.ConnectionException;
 import io.advant.orm.exception.OrmException;
 
 import java.io.InputStream;
@@ -18,9 +17,15 @@ public class TestCreateDB {
         this.connection = connection;
     }
 
-    public void create(String fileName) throws ConnectionException, OrmException {
+    public void create(String fileName) throws OrmException {
         PrintUtil.test("Create tables");
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream("sql/" + fileName + "/create.sql");
-        Query.runScript(connection, inputStream);
+        Query.run(connection, inputStream, false);
+    }
+
+    public void procedure(String fileName) throws OrmException {
+        PrintUtil.test("Create Triggers");
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("sql/" + fileName + "/procedure.sql");
+        Query.batch(connection, "/", inputStream);
     }
 }

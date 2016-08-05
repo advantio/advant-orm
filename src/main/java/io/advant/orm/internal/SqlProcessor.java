@@ -23,6 +23,7 @@ import io.advant.orm.exception.TableParseException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.*;
 import java.util.logging.Level;
@@ -38,69 +39,10 @@ public class SqlProcessor {
     private final Connection connection;
     private Statement stmt;
     private PreparedStatement pstmt;
-    private CallableStatement cstmt;
 
     public SqlProcessor(Connection connection, EntityReflect<? extends Entity> reflect) {
         this.connection = connection;
         this.reflect = reflect;
-    }
-
-    public static boolean runScript(Connection connection, InputStream input) throws SQLException{
-        SqlScript s = new SqlScript(connection, true, true);
-        try {
-            s.run(new InputStreamReader(input));
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
-        }
-        return false;
-    }
-
-    public static int[] execBatch(Connection connection, String[] queries) throws SQLException {
-        Statement stmt = connection.createStatement();
-        for (String query : queries) {
-            stmt.addBatch(query);
-        }
-        int[] result = stmt.executeBatch();
-        stmt.close();
-        return result;
-    }
-
-    public static int[] execBatch(Connection connection, String query, Object[][] values) throws SQLException {
-        PreparedStatement pstmt = connection.prepareStatement(query);
-        for (int i=0; i<values.length; i++) {
-            for (int j=0; j<values[i].length; j++) {
-                Object value = values[i][j];
-                pstmt.setObject(j, value);
-            }
-            pstmt.addBatch(query);
-        }
-        int[] result = pstmt.executeBatch();
-        pstmt.close();
-        return result;
-    }
-
-    public static int[] callBatch(Connection connection, String query, Object[][] values) throws SQLException {
-        CallableStatement cstmt = connection.prepareCall(query);
-        for (int i=0; i<values.length; i++) {
-            for (int j=0; j<values[i].length; j++) {
-                Object value = values[i][j];
-                cstmt.setObject(j, value);
-            }
-            cstmt.addBatch(query);
-        }
-        int[] result = cstmt.executeBatch();
-        cstmt.close();
-        return result;
-    }
-
-    public int exec(String sql) throws SQLException {
-        stmt = connection.createStatement();
-        return stmt.executeUpdate(sql);
-    }
-
-    public ResultSet call(String sql) throws SQLException {
-        cstmt = connection.prepareCall(sql);
-        return cstmt.executeQuery();
     }
 
     public int truncate(boolean force) throws SQLException {
@@ -123,11 +65,11 @@ public class SqlProcessor {
         while (iterator.hasNext()) {
             ColumnData column = iterator.next();
             boolean isLastColumn = !iterator.hasNext() && !iterator.hasNext();
-            select += " " + column.getTable() + "." + column.getColumn() + " AS " + column.getTable() + "_"
+            select += " " + column.getTable() + "." + column.getColumn() + " AS " + column.getTableIndex() + "_"
                     + column.getColumn() + (isLastColumn ? " " : ",");
         }
         for (JoinData joinData : joins) {
-            join += " LEFT JOIN " + joinData.getJoinTable() + " AS " + joinData.getJoinTable()
+            join += " LEFT JOIN " + joinData.getJoinTable() //+ " AS " + joinData.getJoinTable()
                     + " ON " + joinData.getJoinTable() + "." + joinData.getJoinColumn()
                     + "=" + joinData.getTable() + "." + joinData.getColumn();
         }
@@ -179,7 +121,8 @@ public class SqlProcessor {
         columns = columns.substring(0, columns.length()-1) + ")";
         values = values.substring(0, values.length()-1) + ")";
         sql += columns + " VALUES " + values;
-        pstmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+        //pstmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+        pstmt = connection.prepareStatement(sql, new String[]{"ID"});
         int i = 0;
         for (ColumnData columnData : columnsData) {
             Object value = columnData.getValue();
@@ -195,7 +138,12 @@ public class SqlProcessor {
         ResultSet rs = pstmt.getGeneratedKeys();
         if (entity.getId() == null) {
             if (rs.next()) {
-                entity.setId(rs.getLong(1));
+                Object id = rs.getObject(1);
+                if (id instanceof Long) {
+                    entity.setId((Long) id);
+                } else if (id instanceof BigDecimal) {
+                    entity.setId(((BigDecimal) id).longValue());
+                }
             }
         }
         rs.close();
@@ -235,15 +183,12 @@ public class SqlProcessor {
         return pstmt.executeUpdate();
     }
 
-    public void  close() throws SQLException {
+    public void close() throws SQLException {
         if (stmt != null) {
             stmt.close();
         }
         if (pstmt != null) {
             pstmt.close();
-        }
-        if (cstmt != null) {
-            cstmt.close();
         }
     }
 }

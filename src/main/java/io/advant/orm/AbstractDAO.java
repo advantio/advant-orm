@@ -88,26 +88,6 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 		}
 	}
 
-    @Override
-    public int exec(String sql) throws OrmException {
-        try {
-            return sqlProcessor.exec(sql);
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
-            throw new OrmException(e);
-        }
-    }
-
-    @Override
-    public ResultSet call(String sql) throws OrmException {
-        try {
-            return sqlProcessor.call(sql);
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
-            throw new OrmException(e);
-        }
-    }
-
 	@Override
 	public void insert(T entity) throws OrmException {
 		try {
