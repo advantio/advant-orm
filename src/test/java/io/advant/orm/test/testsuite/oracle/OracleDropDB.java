@@ -25,6 +25,11 @@ public class OracleDropDB {
     @BeforeClass
     public static void connect() throws ConnectionException {
         PrintUtil.suite(OracleDropDB.class.getName());
+        try {
+            Class.forName(DBHostType.ORACLE.getDriver());
+        } catch (ClassNotFoundException e) {
+            Assume.assumeTrue("Oracle Driver not available [not mandatory]", false);
+        }
         DefaultParams defaultParams = new DefaultParams();
         DBHostParams params = defaultParams.getDBHostParams(DBHostType.ORACLE, 1521, "xe");
         Connection connection = null;

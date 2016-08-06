@@ -1,16 +1,16 @@
 package io.advant.orm.test.testsuite;
 
-import io.advant.orm.test.testsuite.derby.DerbyCreateDB;
-import io.advant.orm.test.testsuite.derby.DerbyDropDB;
-import io.advant.orm.test.testsuite.derby.DerbyTestDAO;
+import io.advant.orm.test.testsuite.sqlite.SQLiteCreateDB;
+import io.advant.orm.test.testsuite.sqlite.SQLiteDropDB;
+import io.advant.orm.test.testsuite.sqlite.SQLiteTestDAO;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        DerbyCreateDB.class,
-        DerbyTestDAO.class,
-        DerbyDropDB.class
+        SQLiteCreateDB.class,
+        SQLiteTestDAO.class,
+        SQLiteDropDB.class
 })
 public class SQLiteSuite {
 }

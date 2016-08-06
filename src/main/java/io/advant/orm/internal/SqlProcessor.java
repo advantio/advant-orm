@@ -44,9 +44,8 @@ public class SqlProcessor {
         this.reflect = reflect;
     }
 
-    public int truncate(boolean force) throws SQLException {
-        String cascade = force ? "" : " CASCADE";
-        String sql = "TRUNCATE TABLE " + reflect.getTable() + cascade;
+    public int deleteAll() throws SQLException {
+        String sql = "DELETE FROM " + reflect.getTable();
         pstmt = connection.prepareStatement(sql);
         return pstmt.executeUpdate();
     }

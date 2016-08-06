@@ -20,7 +20,7 @@ public class TestCreateDB {
     public void create(String fileName) throws OrmException {
         PrintUtil.test("Create tables");
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream("sql/" + fileName + "/create.sql");
-        Query.run(connection, inputStream, false);
+        Query.run(connection, inputStream, true);
     }
 
     public void procedure(String fileName) throws OrmException {

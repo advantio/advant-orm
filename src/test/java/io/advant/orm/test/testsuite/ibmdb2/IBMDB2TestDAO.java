@@ -24,6 +24,11 @@ public class IBMDB2TestDAO {
     @BeforeClass
     public static void configure() throws ConnectionException {
         PrintUtil.suite(IBMDB2TestDAO.class.getName());
+        try {
+            Class.forName(DBHostType.IBMDB2.getDriver());
+        } catch (ClassNotFoundException e) {
+            Assume.assumeTrue("DB2 Driver not available [not mandatory]", false);
+        }
         DefaultParams defaultParams = new DefaultParams();
         DBHostParams params = defaultParams.getDBHostParams(DBHostType.IBMDB2, 50000);
         Connection connection = null;
@@ -36,9 +41,8 @@ public class IBMDB2TestDAO {
     }
 
     @Test
-    @Ignore("DB2 unsupported")
-    public void test1_clear() throws OrmException {
-        test.clear();
+    public void test1_deleteAll() throws OrmException {
+        test.deleteAll();
     }
 
     @Test

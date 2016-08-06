@@ -26,7 +26,7 @@ public interface DAO<T> {
 
     void close() throws OrmException;
 
-    int truncate(boolean force) throws OrmException;
+    int deleteAll() throws OrmException;
 
     void insert(T entity) throws OrmException;
 

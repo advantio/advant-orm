@@ -24,7 +24,7 @@ public class SQLiteDropDB {
     @BeforeClass
     public static void connect() throws ConnectionException {
         PrintUtil.suite(SQLiteDropDB.class.getName());
-        DefaultParams defaultParams = new DefaultParams(":memory");
+        DefaultParams defaultParams = new DefaultParams(DefaultParams.DATABASE + ":memory");
         DBLocalParams params = defaultParams.getDBLocalParams(DBLocalType.SQLITE);
         Connection connection = DB.newInstance(params, defaultParams.getEntities()).getConnection();
         test = new TestDropDB(connection);

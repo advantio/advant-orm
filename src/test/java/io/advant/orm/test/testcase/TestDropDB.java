@@ -20,6 +20,6 @@ public class TestDropDB {
     public void drop(String fileName) throws OrmException {
         PrintUtil.test("Drop tables");
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream("sql/" + fileName + "/drop.sql");
-        Query.run(connection, inputStream, false);
+        Query.run(connection, inputStream, true);
     }
 }

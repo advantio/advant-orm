@@ -35,12 +35,12 @@ public class TestDAO {
         categoryDAO = new GenericDAOImpl<>(CategoryEntity.class, connection);
     }
 
-    public void clear() throws OrmException {
-        PrintUtil.test("Clear tables");
-        brandDAO.truncate(true);
-        productDAO.truncate(true);
-        productCategoryDAO.truncate(true);
-        categoryDAO.truncate(true);
+    public void deleteAll() throws OrmException {
+        PrintUtil.test("Delete all from tables");
+        brandDAO.deleteAll();
+        productDAO.deleteAll();
+        productCategoryDAO.deleteAll();
+        categoryDAO.deleteAll();
     }
 
     /**

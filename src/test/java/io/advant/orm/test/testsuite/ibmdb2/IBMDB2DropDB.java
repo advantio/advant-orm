@@ -25,6 +25,11 @@ public class IBMDB2DropDB {
     @BeforeClass
     public static void connect() throws ConnectionException {
         PrintUtil.suite(IBMDB2DropDB.class.getName());
+        try {
+            Class.forName(DBHostType.IBMDB2.getDriver());
+        } catch (ClassNotFoundException e) {
+            Assume.assumeTrue("DB2 Driver not available [not mandatory]", false);
+        }
         DefaultParams defaultParams = new DefaultParams();
         DBHostParams params = defaultParams.getDBHostParams(DBHostType.IBMDB2, 50000);
         Connection connection = null;

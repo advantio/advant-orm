@@ -23,8 +23,13 @@ public class OracleCreateDB {
     private static TestCreateDB test;
 
     @BeforeClass
-    public static void connect() throws ConnectionException {
+    public static void connect() {
         PrintUtil.suite(OracleCreateDB.class.getName());
+        try {
+            Class.forName(DBHostType.ORACLE.getDriver());
+        } catch (ClassNotFoundException e) {
+            Assume.assumeTrue("Oracle Driver not available [not mandatory]", false);
+        }
         DefaultParams defaultParams = new DefaultParams();
         DBHostParams params = defaultParams.getDBHostParams(DBHostType.ORACLE, 1521, "xe");
         Connection connection = null;

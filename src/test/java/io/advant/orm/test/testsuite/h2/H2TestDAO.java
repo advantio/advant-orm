@@ -15,7 +15,6 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 /**
  * @author Marco Romagnolo
@@ -35,8 +34,8 @@ public class H2TestDAO {
     }
 
     @Test
-    public void test1_clear() throws OrmException {
-        test.clear();
+    public void test1_deleteAll() throws OrmException {
+        test.deleteAll();
     }
 
     @Test

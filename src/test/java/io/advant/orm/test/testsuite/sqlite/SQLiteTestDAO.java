@@ -27,15 +27,15 @@ public class SQLiteTestDAO {
     @BeforeClass
     public static void configure() throws ConnectionException {
         PrintUtil.suite(SQLiteTestDAO.class.getName());
-        DefaultParams defaultParams = new DefaultParams(":memory");
+        DefaultParams defaultParams = new DefaultParams(DefaultParams.DATABASE + ":memory");
         DBLocalParams params = defaultParams.getDBLocalParams(DBLocalType.SQLITE);
         Connection connection = DB.newInstance(params, defaultParams.getEntities()).getConnection();
         test = new TestDAO(connection);
     }
 
     @Test
-    public void test1_clear() throws OrmException {
-        test.clear();
+    public void test1_deleteAll() throws OrmException {
+        test.deleteAll();
     }
 
     @Test

@@ -24,6 +24,11 @@ public class OracleTestDAO {
     @BeforeClass
     public static void configure() throws ConnectionException {
         PrintUtil.suite(OracleTestDAO.class.getName());
+        try {
+            Class.forName(DBHostType.ORACLE.getDriver());
+        } catch (ClassNotFoundException e) {
+            Assume.assumeTrue("Oracle Driver not available [not mandatory]", false);
+        }
         DefaultParams defaultParams = new DefaultParams();
         DBHostParams params = defaultParams.getDBHostParams(DBHostType.ORACLE, 1521, "xe");
         Connection connection = null;
@@ -36,8 +41,8 @@ public class OracleTestDAO {
     }
 
     @Test
-    public void test1_clear() throws OrmException {
-        test.clear();
+    public void test1_deleteAll() throws OrmException {
+        test.deleteAll();
     }
 
     @Test
