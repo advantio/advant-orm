@@ -37,7 +37,6 @@ public class SqlProcessor {
     private static final Logger LOGGER = Logger.getLogger(SqlProcessor.class.getName());
     private final EntityReflect<? extends Entity> reflect;
     private final Connection connection;
-    private Statement stmt;
     private PreparedStatement pstmt;
 
     public SqlProcessor(Connection connection, EntityReflect<? extends Entity> reflect) {
@@ -139,10 +138,8 @@ public class SqlProcessor {
         if (entity.getId() == null) {
             if (rs.next()) {
                 Object id = rs.getObject(1);
-                if (id instanceof Long) {
-                    entity.setId((Long) id);
-                } else if (id instanceof BigDecimal) {
-                    entity.setId(((BigDecimal) id).longValue());
+                if (id instanceof Number) {
+                    entity.setId(((Number) id).longValue());
                 }
             }
         }
@@ -184,9 +181,6 @@ public class SqlProcessor {
     }
 
     public void close() throws SQLException {
-        if (stmt != null) {
-            stmt.close();
-        }
         if (pstmt != null) {
             pstmt.close();
         }

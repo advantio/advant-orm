@@ -40,6 +40,8 @@ public class DBLocalParams extends AbstractParams {
             case HSQLDB:
                 setUri("jdbc:hsqldb:" + database);
                 break;
+            case SQLITE:
+                setUri("jdbc:sqlite:" + database);
         }
     }
 

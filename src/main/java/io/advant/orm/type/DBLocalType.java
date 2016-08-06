@@ -7,7 +7,8 @@ public enum DBLocalType {
 
     DERBY("org.apache.derby.jdbc.EmbeddedDriver"),
     H2("org.h2.Driver"),
-    HSQLDB("org.hsqldb.jdbc.JDBCDriver");
+    HSQLDB("org.hsqldb.jdbc.JDBCDriver"),
+    SQLITE("org.sqlite.JDBC");
 
     private final String driver;
 

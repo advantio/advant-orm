@@ -89,7 +89,7 @@ public class TestDAO {
         PrintUtil.result("Inserted category: " + category2);
 
         //Insert Products
-        PrintUtil.action("Inserting categories");
+        PrintUtil.action("Inserting products");
 
         ProductEntity product = new ProductEntity();
         product.setId(1000L);

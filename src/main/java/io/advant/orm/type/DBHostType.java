@@ -22,7 +22,7 @@ package io.advant.orm.type;
 public enum DBHostType {
     MYSQL("com.mysql.jdbc.Driver"),
     POSTGRESQL("org.postgresql.Driver"),
-    IBMDB2("COM.ibm.db2.jdbc.app.DB2Driver"),
+    IBMDB2("com.ibm.db2.jcc.DB2Driver"),
     MSSQL("com.microsoft.sqlserver.jdbc.SQLServerDrive"),
     ORACLE("oracle.jdbc.driver.OracleDriver"),
     SYBASE("net.sourceforge.jtds.jdbc.Driver");

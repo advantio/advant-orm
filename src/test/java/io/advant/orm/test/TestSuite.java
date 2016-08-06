@@ -25,12 +25,11 @@ import org.junit.runners.Suite;
         DerbySuite.class,
         H2Suite.class,
         HSQLDBSuite.class,
+        SQLiteSuite.class,
         MysqlSuite.class,
         PostgresqlSuite.class,
         OracleSuite.class,
-//        MSSQLSuite.class,
-//        IBMDB2Suite.class,
-//        SybaseSuite.class
+        IBMDB2Suite.class,
 })
 public class TestSuite {
 }

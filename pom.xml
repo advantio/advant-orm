@@ -130,6 +130,31 @@
                     </plugin>
                 </plugins>
             </build>
+            <dependencies>
+                <!-- Oracle -->
+                <dependency>
+                    <groupId>oracle</groupId>
+                    <artifactId>com.oracle</artifactId>
+                    <version>11.2.0.4.0</version>
+                    <scope>system</scope>
+                    <systemPath>${project.basedir}/src/test/resources/driver/ojdbc6.jar</systemPath>
+                </dependency>
+                <!-- IBM DB2 -->
+                <dependency>
+                    <groupId>db2</groupId>
+                    <artifactId>com.ibm</artifactId>
+                    <version>1</version>
+                    <scope>system</scope>
+                    <systemPath>${project.basedir}/src/test/resources/driver/db2jcc.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>db2</groupId>
+                    <artifactId>com.ibm.license</artifactId>
+                    <version>1</version>
+                    <scope>system</scope>
+                    <systemPath>${project.basedir}/src/test/resources/driver/db2jcc_license_cu.jar</systemPath>
+                </dependency>
+            </dependencies>
         </profile>
     </profiles>
 
@@ -190,13 +215,6 @@
             <version>1.4.192</version>
             <scope>test</scope>
         </dependency>
-        <!-- Microsoft and Sybase -->
-        <dependency>
-            <groupId>net.sourceforge.jtds</groupId>
-            <artifactId>jtds</artifactId>
-            <version>1.3.1</version>
-            <scope>test</scope>
-        </dependency>
         <!-- SQLite -->
         <dependency>
             <groupId>org.xerial</groupId>
@@ -204,13 +222,12 @@
             <version>3.8.11.2</version>
             <scope>test</scope>
         </dependency>
-        <!-- Oracle -->
+        <!-- Microsoft and Sybase -->
         <dependency>
-            <groupId>oracle</groupId>
-            <artifactId>com.oracle</artifactId>
-            <version>11.2.0.4.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/test/resources/driver/ojdbc6.jar</systemPath>
+            <groupId>net.sourceforge.jtds</groupId>
+            <artifactId>jtds</artifactId>
+            <version>1.3.1</version>
+            <scope>test</scope>
         </dependency>
 	</dependencies>
 
