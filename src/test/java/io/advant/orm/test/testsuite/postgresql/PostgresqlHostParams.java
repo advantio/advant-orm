@@ -10,6 +10,6 @@ import io.advant.orm.type.DBHostType;
 public class PostgresqlHostParams extends DBHostParams {
 
     public PostgresqlHostParams() {
-        super(DBHostType.MYSQL, DefaultParams.HOST, 5432, DefaultParams.DATABASE, "postgres", "");
+        super(DBHostType.POSTGRESQL, DefaultParams.HOST, 5432, DefaultParams.DATABASE, "postgres", "");
     }
 }
