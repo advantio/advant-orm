@@ -30,11 +30,9 @@ public class IBMDB2DropDB {
         } catch (ClassNotFoundException e) {
             Assume.assumeTrue("DB2 Driver not available [not mandatory]", false);
         }
-        DefaultParams defaultParams = new DefaultParams();
-        DBHostParams params = defaultParams.getDBHostParams(DBHostType.IBMDB2, 50000);
         Connection connection = null;
         try {
-            connection = DB.newInstance(params, defaultParams.getEntities()).getConnection();
+            connection = DB.newInstance(new IBMDB2HostParams(), DefaultParams.getEntities()).getConnection();
         } catch (ConnectionException e) {
             Assume.assumeTrue("Connection to IBM DB2 database is not available [not mandatory]", false);
         }

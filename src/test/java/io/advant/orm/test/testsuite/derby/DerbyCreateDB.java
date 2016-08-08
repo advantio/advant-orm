@@ -25,9 +25,7 @@ public class DerbyCreateDB {
     @BeforeClass
     public static void connect() throws ConnectionException {
         PrintUtil.suite(DerbyCreateDB.class.getName());
-        DefaultParams defaultParams = new DefaultParams("memory:" + DefaultParams.DATABASE + ";create=true;user=test;password=test");
-        DBLocalParams params = defaultParams.getDBLocalParams(DBLocalType.DERBY);
-        Connection connection = DB.newInstance(params, defaultParams.getEntities()).getConnection();
+        Connection connection = DB.newInstance(new DerbyLocalParams(), DefaultParams.getEntities()).getConnection();
         test = new TestCreateDB(connection);
     }
 

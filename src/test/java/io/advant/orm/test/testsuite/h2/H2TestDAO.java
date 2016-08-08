@@ -27,9 +27,8 @@ public class H2TestDAO {
     @BeforeClass
     public static void configure() throws ConnectionException {
         PrintUtil.suite(H2TestDAO.class.getName());
-        DefaultParams defaultParams = new DefaultParams("mem:" + DefaultParams.DATABASE + ";DB_CLOSE_DELAY=-1");
-        DBLocalParams params = defaultParams.getDBLocalParams(DBLocalType.H2);
-        Connection connection = DB.newInstance(params, defaultParams.getEntities()).getConnection();
+        DefaultParams defaultParams = new DefaultParams();
+        Connection connection = DB.newInstance(new H2LocalParams(), defaultParams.getEntities()).getConnection();
         test = new TestDAO(connection);
     }
 

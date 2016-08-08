@@ -25,9 +25,7 @@ public class HSQLDBDropDB {
     @BeforeClass
     public static void connect() throws ConnectionException {
         PrintUtil.suite(HSQLDBDropDB.class.getName());
-        DefaultParams defaultParams = new DefaultParams("mem:" + DefaultParams.DATABASE);
-        DBLocalParams params = defaultParams.getDBLocalParams(DBLocalType.HSQLDB);
-        Connection connection = DB.newInstance(params, defaultParams.getEntities()).getConnection();
+        Connection connection = DB.newInstance(new HSQLDBLocalParams(), DefaultParams.getEntities()).getConnection();
         test = new TestDropDB(connection);
     }
 

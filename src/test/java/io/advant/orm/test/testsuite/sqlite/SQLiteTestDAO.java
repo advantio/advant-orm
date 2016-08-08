@@ -27,9 +27,7 @@ public class SQLiteTestDAO {
     @BeforeClass
     public static void configure() throws ConnectionException {
         PrintUtil.suite(SQLiteTestDAO.class.getName());
-        DefaultParams defaultParams = new DefaultParams(DefaultParams.DATABASE + ":memory");
-        DBLocalParams params = defaultParams.getDBLocalParams(DBLocalType.SQLITE);
-        Connection connection = DB.newInstance(params, defaultParams.getEntities()).getConnection();
+        Connection connection = DB.newInstance(new SQLiteLocalParams(), DefaultParams.getEntities()).getConnection();
         test = new TestDAO(connection);
     }
 

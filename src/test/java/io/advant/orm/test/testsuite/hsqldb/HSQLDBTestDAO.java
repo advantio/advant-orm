@@ -27,9 +27,7 @@ public class HSQLDBTestDAO {
     @BeforeClass
     public static void configure() throws ConnectionException {
         PrintUtil.suite(HSQLDBTestDAO.class.getName());
-        DefaultParams defaultParams = new DefaultParams("mem:" + DefaultParams.DATABASE);
-        DBLocalParams params = defaultParams.getDBLocalParams(DBLocalType.HSQLDB);
-        Connection connection = DB.newInstance(params, defaultParams.getEntities()).getConnection();
+        Connection connection = DB.newInstance(new HSQLDBLocalParams(), DefaultParams.getEntities()).getConnection();
         test = new TestDAO(connection);
     }
 

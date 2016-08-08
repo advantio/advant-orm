@@ -26,10 +26,9 @@ public class MysqlCreateDB {
     public static void connect() {
         PrintUtil.suite(MysqlCreateDB.class.getName());
         DefaultParams defaultParams = new DefaultParams();
-        DBHostParams params = defaultParams.getDBHostParams(DBHostType.MYSQL, 3306);
         Connection connection = null;
         try {
-            connection = DB.newInstance(params, defaultParams.getEntities()).getConnection();
+            connection = DB.newInstance(new MysqlHostParams(), defaultParams.getEntities()).getConnection();
         } catch (ConnectionException e) {
             System.out.println("Connection to Mysql database is not available [not mandatory]");
             Assume.assumeTrue(false);

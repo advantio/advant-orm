@@ -24,9 +24,7 @@ public class SQLiteCreateDB {
     @BeforeClass
     public static void connect() throws ConnectionException {
         PrintUtil.suite(SQLiteCreateDB.class.getName());
-        DefaultParams defaultParams = new DefaultParams(DefaultParams.DATABASE + ":memory");
-        DBLocalParams params = defaultParams.getDBLocalParams(DBLocalType.SQLITE);
-        Connection connection = DB.newInstance(params, defaultParams.getEntities()).getConnection();
+        Connection connection = DB.newInstance(new SQLiteLocalParams(), DefaultParams.getEntities()).getConnection();
         test = new TestCreateDB(connection);
     }
 

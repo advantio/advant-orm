@@ -22,13 +22,11 @@ public class PostgresqlTestDAO {
     private static TestDAO test;
 
     @BeforeClass
-    public static void configure() throws ConnectionException {
+    public static void configure() {
         PrintUtil.suite(PostgresqlTestDAO.class.getName());
-        DefaultParams defaultParams = new DefaultParams();
-        DBHostParams params = defaultParams.getDBHostParams(DBHostType.POSTGRESQL, 5432);
         Connection connection = null;
         try {
-            connection = DB.newInstance(params, defaultParams.getEntities()).getConnection();
+            connection = DB.newInstance(new PostgresqlHostParams(), DefaultParams.getEntities()).getConnection();
         } catch (ConnectionException e) {
             System.out.println("Connection to Postgresql database is not available [not mandatory]");
             Assume.assumeTrue(false);

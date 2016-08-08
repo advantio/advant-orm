@@ -25,9 +25,7 @@ public class H2DropDB {
     @BeforeClass
     public static void connect() throws ConnectionException {
         PrintUtil.suite(H2DropDB.class.getName());
-        DefaultParams defaultParams = new DefaultParams("mem:" + DefaultParams.DATABASE + ";DB_CLOSE_DELAY=-1");
-        DBLocalParams params = defaultParams.getDBLocalParams(DBLocalType.H2);
-        Connection connection = DB.newInstance(params, defaultParams.getEntities()).getConnection();
+        Connection connection = DB.newInstance(new H2LocalParams(), DefaultParams.getEntities()).getConnection();
         test = new TestDropDB(connection);
     }
 

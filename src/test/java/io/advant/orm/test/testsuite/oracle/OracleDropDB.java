@@ -30,11 +30,9 @@ public class OracleDropDB {
         } catch (ClassNotFoundException e) {
             Assume.assumeTrue("Oracle Driver not available [not mandatory]", false);
         }
-        DefaultParams defaultParams = new DefaultParams();
-        DBHostParams params = defaultParams.getDBHostParams(DBHostType.ORACLE, 1521, "xe");
         Connection connection = null;
         try {
-            connection = DB.newInstance(params, defaultParams.getEntities()).getConnection();
+            connection = DB.newInstance(new OracleHostParams(), DefaultParams.getEntities()).getConnection();
         } catch (ConnectionException e) {
             Assume.assumeTrue("Connection to Oracle database is not available [not mandatory]", false);
         }
