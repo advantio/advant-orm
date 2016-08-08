@@ -120,7 +120,7 @@ public class SqlProcessor {
         values = values.substring(0, values.length()-1) + ")";
         sql += columns + " VALUES " + values;
         //pstmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-        pstmt = connection.prepareStatement(sql, new String[]{"ID"});
+        pstmt = connection.prepareStatement(sql, new String[]{"id"});
         int i = 0;
         for (ColumnData columnData : columnsData) {
             Object value = columnData.getValue();
