@@ -1,19 +1,16 @@
 package io.advant.orm.test.testsuite.hsqldb;
 
 import io.advant.orm.DB;
-import io.advant.orm.DBLocalParams;
 import io.advant.orm.exception.ConnectionException;
 import io.advant.orm.exception.OrmException;
 import io.advant.orm.test.testcase.DefaultParams;
 import io.advant.orm.test.testcase.PrintUtil;
 import io.advant.orm.test.testcase.TestDropDB;
-import io.advant.orm.type.DBLocalType;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 /**
  * @author Marco Romagnolo

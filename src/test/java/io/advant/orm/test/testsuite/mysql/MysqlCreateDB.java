@@ -1,13 +1,11 @@
 package io.advant.orm.test.testsuite.mysql;
 
 import io.advant.orm.DB;
-import io.advant.orm.DBHostParams;
 import io.advant.orm.exception.ConnectionException;
 import io.advant.orm.exception.OrmException;
 import io.advant.orm.test.testcase.DefaultParams;
 import io.advant.orm.test.testcase.PrintUtil;
 import io.advant.orm.test.testcase.TestCreateDB;
-import io.advant.orm.type.DBHostType;
 import org.junit.AfterClass;
 import org.junit.Assume;
 import org.junit.BeforeClass;
@@ -23,16 +21,9 @@ public class MysqlCreateDB {
     private static TestCreateDB test;
 
     @BeforeClass
-    public static void connect() {
+    public static void connect() throws ConnectionException {
         PrintUtil.suite(MysqlCreateDB.class.getName());
-        DefaultParams defaultParams = new DefaultParams();
-        Connection connection = null;
-        try {
-            connection = DB.newInstance(new MysqlHostParams(), defaultParams.getEntities()).getConnection();
-        } catch (ConnectionException e) {
-            System.out.println("Connection to Mysql database is not available [not mandatory]");
-            Assume.assumeTrue(false);
-        }
+        Connection connection = DB.newInstance(new MysqlHostParams(), DefaultParams.getEntities()).getConnection();
         test = new TestCreateDB(connection);
     }
 

@@ -1,92 +1,58 @@
 package io.advant.orm;
 
 import io.advant.orm.internal.AbstractParams;
-import io.advant.orm.type.DBHostType;
+import io.advant.orm.type.DBType;
 
 import java.util.Properties;
 
 /**
- *
+ * @author Marco Romagnolo
  */
 public class DBHostParams extends AbstractParams {
 
-    private DBHostType dbType;
-    private String host;
-    private int port;
-    private String database;
+    private final String host;
+    private final int port;
 
-    public DBHostParams(DBHostType dbType, String host, int port, String database, String user, String password) {
-        super(user, password);
-        this.dbType = dbType;
-        this.host = host;
-        this.port = port;
-        this.database = database;
-        setDriver(dbType.getDriver());
-        setUri();
+    public DBHostParams(DBType dbType, String host, int port, String database, String user, String password) {
+        this(dbType, host, port, database, user, password, null);
     }
 
-    public DBHostParams(DBHostType dbType, String host, int port, String database, String user, String password, Properties properties) {
-        super(user, password, properties);
-        this.dbType = dbType;
+    public DBHostParams(DBType dbType, String host, int port, String database, String user, String password, Properties properties) {
+        super(dbType, database, user, password, properties);
         this.host = host;
         this.port = port;
-        this.database = database;
-        setDriver(dbType.getDriver());
         setUri();
     }
 
     private void setUri() {
-        switch (dbType) {
+        switch (getDBType()) {
             case MYSQL:
-                setUri("jdbc:mysql://" + host + ":" + port + "/" + database);
+                setUri("jdbc:mysql://" + host + ":" + port + "/" + getDatabase());
                 break;
             case POSTGRESQL:
-                setUri("jdbc:postgresql://" + host + ":" + port + "/" + database);
+                setUri("jdbc:postgresql://" + host + ":" + port + "/" + getDatabase());
                 break;
             case IBMDB2:
-                setUri("jdbc:db2://" + host + ":" + port + "/" + database);
+                setUri("jdbc:db2://" + host + ":" + port + "/" + getDatabase());
                 break;
             case MSSQL:
-                setUri("jdbc:microsoft:sqlserver://" + host + ":" + port + "/" + database);
+                setUri("jdbc:microsoft:sqlserver://" + host + ":" + port + "/" + getDatabase());
                 break;
             case SYBASE:
-                setUri("jdbc:jtds:sybase://" + host + ":" + port + "/" + database);
+                setUri("jdbc:jtds:sybase://" + host + ":" + port + "/" + getDatabase());
                 break;
             case ORACLE:
-                setUri("jdbc:oracle:thin:@" + host + ":" + port + ":" + database);
+                setUri("jdbc:oracle:thin:@" + host + ":" + port + ":" + getDatabase());
                 break;
         }
-    }
-
-    public DBHostType getDbType() {
-        return dbType;
-    }
-
-    public void setDbType(DBHostType dbType) {
-        this.dbType = dbType;
     }
 
     public String getHost() {
         return host;
     }
 
-    public void setHost(String host) {
-        this.host = host;
-    }
-
     public int getPort() {
         return port;
     }
 
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    public String getDatabase() {
-        return database;
-    }
-
-    public void setDatabase(String database) {
-        this.database = database;
-    }
 }

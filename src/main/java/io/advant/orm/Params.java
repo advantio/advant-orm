@@ -16,6 +16,8 @@
 
 package io.advant.orm;
 
+import io.advant.orm.type.DBType;
+
 import java.util.Properties;
 import java.util.Set;
 
@@ -24,9 +26,15 @@ import java.util.Set;
  */
 public interface Params {
 
-    String getDriver();
+    DBType getDBType();
 
     String getUri();
+
+    String getDatabase();
+
+    String getUser();
+
+    String getPassword();
 
     Properties getProperties();
 }

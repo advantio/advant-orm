@@ -17,14 +17,13 @@
 package io.advant.orm.test.dao.impl;
 
 import io.advant.orm.AbstractDAO;
+import io.advant.orm.DBConnection;
 import io.advant.orm.test.dao.ProductCategoryDAO;
 import io.advant.orm.test.entity.ProductCategoryEntity;
 
-import java.sql.Connection;
-
 public class ProductCategoryDAOImpl extends AbstractDAO<ProductCategoryEntity> implements ProductCategoryDAO<ProductCategoryEntity> {
 
-    public ProductCategoryDAOImpl(Connection connection) {
+    public ProductCategoryDAOImpl(DBConnection connection) {
         super(connection);
     }
 

@@ -1,13 +1,13 @@
 package io.advant.orm.test.testsuite.oracle;
 
 import io.advant.orm.DB;
-import io.advant.orm.DBHostParams;
+import io.advant.orm.DBConnection;
 import io.advant.orm.exception.ConnectionException;
 import io.advant.orm.exception.OrmException;
 import io.advant.orm.test.testcase.DefaultParams;
 import io.advant.orm.test.testcase.PrintUtil;
 import io.advant.orm.test.testcase.TestDAO;
-import io.advant.orm.type.DBHostType;
+import io.advant.orm.type.DBType;
 import org.junit.*;
 import org.junit.runners.MethodSorters;
 
@@ -25,11 +25,11 @@ public class OracleTestDAO {
     public static void configure() throws ConnectionException {
         PrintUtil.suite(OracleTestDAO.class.getName());
         try {
-            Class.forName(DBHostType.ORACLE.getDriver());
+            Class.forName(DBType.ORACLE.getDriver());
         } catch (ClassNotFoundException e) {
             Assume.assumeTrue("Oracle Driver not available [not mandatory]", false);
         }
-        Connection connection = null;
+        DBConnection connection = null;
         try {
             connection = DB.newInstance(new OracleHostParams(), DefaultParams.getEntities()).getConnection();
         } catch (ConnectionException e) {

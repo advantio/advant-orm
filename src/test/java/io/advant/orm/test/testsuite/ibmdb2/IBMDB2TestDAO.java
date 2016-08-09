@@ -1,13 +1,13 @@
 package io.advant.orm.test.testsuite.ibmdb2;
 
 import io.advant.orm.DB;
-import io.advant.orm.DBHostParams;
+import io.advant.orm.DBConnection;
 import io.advant.orm.exception.ConnectionException;
 import io.advant.orm.exception.OrmException;
 import io.advant.orm.test.testcase.DefaultParams;
 import io.advant.orm.test.testcase.PrintUtil;
 import io.advant.orm.test.testcase.TestDAO;
-import io.advant.orm.type.DBHostType;
+import io.advant.orm.type.DBType;
 import org.junit.*;
 import org.junit.runners.MethodSorters;
 
@@ -25,11 +25,11 @@ public class IBMDB2TestDAO {
     public static void configure() throws ConnectionException {
         PrintUtil.suite(IBMDB2TestDAO.class.getName());
         try {
-            Class.forName(DBHostType.IBMDB2.getDriver());
+            Class.forName(DBType.IBMDB2.getDriver());
         } catch (ClassNotFoundException e) {
             Assume.assumeTrue("DB2 Driver not available [not mandatory]", false);
         }
-        Connection connection = null;
+        DBConnection connection = null;
         try {
             connection = DB.newInstance(new IBMDB2HostParams(), DefaultParams.getEntities()).getConnection();
         } catch (ConnectionException e) {

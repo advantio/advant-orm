@@ -1,13 +1,12 @@
 package io.advant.orm.test.testsuite.oracle;
 
 import io.advant.orm.DB;
-import io.advant.orm.DBHostParams;
 import io.advant.orm.exception.ConnectionException;
 import io.advant.orm.exception.OrmException;
 import io.advant.orm.test.testcase.DefaultParams;
 import io.advant.orm.test.testcase.PrintUtil;
 import io.advant.orm.test.testcase.TestCreateDB;
-import io.advant.orm.type.DBHostType;
+import io.advant.orm.type.DBType;
 import org.junit.AfterClass;
 import org.junit.Assume;
 import org.junit.BeforeClass;
@@ -26,7 +25,7 @@ public class OracleCreateDB {
     public static void connect() {
         PrintUtil.suite(OracleCreateDB.class.getName());
         try {
-            Class.forName(DBHostType.ORACLE.getDriver());
+            Class.forName(DBType.ORACLE.getDriver());
         } catch (ClassNotFoundException e) {
             Assume.assumeTrue("Oracle Driver not available [not mandatory]", false);
         }

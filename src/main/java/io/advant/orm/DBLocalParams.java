@@ -1,7 +1,7 @@
 package io.advant.orm;
 
 import io.advant.orm.internal.AbstractParams;
-import io.advant.orm.type.DBLocalType;
+import io.advant.orm.type.DBType;
 
 import java.util.Properties;
 
@@ -10,46 +10,29 @@ import java.util.Properties;
  */
 public class DBLocalParams extends AbstractParams {
 
-    private String database;
-    private DBLocalType dbType;
-
-    public DBLocalParams(DBLocalType dbType, String database, String user, String password) {
-        super(user, password);
-        this.dbType = dbType;
-        this.database = database;
-        setDriver(dbType.getDriver());
-        setUri();
+    public DBLocalParams(DBType dbType, String database, String user, String password) {
+        this(dbType, database, user, password, null);
     }
 
-    public DBLocalParams(DBLocalType dbType, String database, String user, String password, Properties properties) {
-        super(user, password, properties);
-        this.dbType = dbType;
-        this.database = database;
-        setDriver(dbType.getDriver());
+    public DBLocalParams(DBType dbType, String database, String user, String password, Properties properties) {
+        super(dbType, database, user, password, properties);
         setUri();
     }
 
     private void setUri() {
-        switch (dbType) {
+        switch (getDBType()) {
             case DERBY:
-                setUri("jdbc:derby:" + database);
+                setUri("jdbc:derby:" + getDatabase());
                 break;
             case H2:
-                setUri("jdbc:h2:" + database);
+                setUri("jdbc:h2:" + getDatabase());
                 break;
             case HSQLDB:
-                setUri("jdbc:hsqldb:" + database);
+                setUri("jdbc:hsqldb:" + getDatabase());
                 break;
             case SQLITE:
-                setUri("jdbc:sqlite:" + database);
+                setUri("jdbc:sqlite:" + getDatabase());
         }
     }
 
-    public String getDatabase() {
-        return database;
-    }
-
-    public void setDatabase(String database) {
-        this.database = database;
-    }
 }

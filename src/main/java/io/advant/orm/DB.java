@@ -19,6 +19,7 @@ package io.advant.orm;
 import io.advant.orm.exception.ConnectionException;
 import io.advant.orm.exception.TableParseException;
 import io.advant.orm.internal.EntityReflect;
+import io.advant.orm.type.DBType;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -34,11 +35,13 @@ public class DB {
 
     private static final Logger LOGGER = Logger.getLogger(DB.class.getName());
     private final Params params;
+    private final DBType dbType;
     private static DB instance;
-    private Connection connection;
+    private DBConnection connection;
 
     private DB(Params params, Set<String> entities) {
         this.params = params;
+        this.dbType = params.getDBType();
         try {
             if (entities!=null) {
                 for (String entity : entities) {
@@ -46,10 +49,14 @@ public class DB {
                     EntityReflect.getInstance(entityClass);
                 }
             }
-            Class.forName(params.getDriver());
+            Class.forName(dbType.getDriver());
         } catch (ClassNotFoundException | TableParseException | NoSuchFieldException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
+    }
+
+    public DBType getDbType() {
+        return dbType;
     }
 
     public static DB newInstance(Params params, Set<String> entities) throws ConnectionException {
@@ -61,7 +68,7 @@ public class DB {
         return instance;
     }
 
-    public Connection getConnection() throws ConnectionException {
+    public DBConnection getConnection() throws ConnectionException {
         try {
             if (connection == null || connection.isClosed()) {
                 connection = connect();
@@ -81,8 +88,9 @@ public class DB {
         }
     }
 
-    private Connection connect() throws SQLException {
-        connection = DriverManager.getConnection(params.getUri(), params.getProperties());
+    private DBConnection connect() throws SQLException {
+        Connection conn = DriverManager.getConnection(params.getUri(), params.getProperties());
+        connection = new DBConnection(conn, dbType);
         return connection;
     }
 

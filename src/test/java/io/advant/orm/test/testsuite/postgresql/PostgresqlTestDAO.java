@@ -1,13 +1,12 @@
 package io.advant.orm.test.testsuite.postgresql;
 
 import io.advant.orm.DB;
-import io.advant.orm.DBHostParams;
+import io.advant.orm.DBConnection;
 import io.advant.orm.exception.ConnectionException;
 import io.advant.orm.exception.OrmException;
 import io.advant.orm.test.testcase.DefaultParams;
 import io.advant.orm.test.testcase.PrintUtil;
 import io.advant.orm.test.testcase.TestDAO;
-import io.advant.orm.type.DBHostType;
 import org.junit.*;
 import org.junit.runners.MethodSorters;
 
@@ -22,15 +21,9 @@ public class PostgresqlTestDAO {
     private static TestDAO test;
 
     @BeforeClass
-    public static void configure() {
+    public static void configure() throws ConnectionException {
         PrintUtil.suite(PostgresqlTestDAO.class.getName());
-        Connection connection = null;
-        try {
-            connection = DB.newInstance(new PostgresqlHostParams(), DefaultParams.getEntities()).getConnection();
-        } catch (ConnectionException e) {
-            System.out.println("Connection to Postgresql database is not available [not mandatory]");
-            Assume.assumeTrue(false);
-        }
+        DBConnection connection = DB.newInstance(new PostgresqlHostParams(), DefaultParams.getEntities()).getConnection();
         test = new TestDAO(connection);
     }
 

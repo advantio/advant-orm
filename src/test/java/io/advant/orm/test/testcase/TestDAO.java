@@ -1,5 +1,6 @@
 package io.advant.orm.test.testcase;
 
+import io.advant.orm.DBConnection;
 import io.advant.orm.GenericDAO;
 import io.advant.orm.GenericDAOImpl;
 import io.advant.orm.exception.OrmException;
@@ -28,7 +29,7 @@ public class TestDAO {
     private GenericDAO<ProductCategoryEntity> productCategoryDAO;
     private GenericDAO<CategoryEntity> categoryDAO;
 
-    public TestDAO(Connection connection) {
+    public TestDAO(DBConnection connection) {
         brandDAO = new BrandDAOImpl(connection);
         productDAO = new ProductDAOImpl(connection);
         productCategoryDAO = new GenericDAOImpl<>(ProductCategoryEntity.class, connection);

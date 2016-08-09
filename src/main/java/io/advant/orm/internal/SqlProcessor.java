@@ -17,16 +17,12 @@
 package io.advant.orm.internal;
 
 import io.advant.orm.AbstractTable;
+import io.advant.orm.DBConnection;
 import io.advant.orm.Entity;
 import io.advant.orm.exception.TableParseException;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.math.BigDecimal;
 import java.sql.*;
 import java.util.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -37,11 +33,13 @@ public class SqlProcessor {
     private static final Logger LOGGER = Logger.getLogger(SqlProcessor.class.getName());
     private final EntityReflect<? extends Entity> reflect;
     private final Connection connection;
+    private final CustomStatement customStatement;
     private PreparedStatement pstmt;
 
-    public SqlProcessor(Connection connection, EntityReflect<? extends Entity> reflect) {
+    public SqlProcessor(DBConnection connection, EntityReflect<? extends Entity> reflect) {
         this.connection = connection;
         this.reflect = reflect;
+        this.customStatement = new CustomStatement(connection);
     }
 
     public int deleteAll() throws SQLException {
@@ -67,9 +65,8 @@ public class SqlProcessor {
                     + column.getColumn() + (isLastColumn ? " " : ",");
         }
         for (JoinData joinData : joins) {
-            join += " LEFT JOIN " + joinData.getJoinTable() //+ " AS " + joinData.getJoinTable()
-                    + " ON " + joinData.getJoinTable() + "." + joinData.getJoinColumn()
-                    + "=" + joinData.getTable() + "." + joinData.getColumn();
+            join += " LEFT JOIN " + joinData.getJoinTable() + " ON " + joinData.getJoinTable()
+                    + "." + joinData.getJoinColumn() + "=" + joinData.getTable() + "." + joinData.getColumn();
         }
         String where = conditions != null ? " WHERE " + conditions.asSQL() + " " : "";
         String sql = select + from + join + where;
@@ -119,8 +116,7 @@ public class SqlProcessor {
         columns = columns.substring(0, columns.length()-1) + ")";
         values = values.substring(0, values.length()-1) + ")";
         sql += columns + " VALUES " + values;
-        //pstmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-        pstmt = connection.prepareStatement(sql, new String[]{"id"});
+        pstmt = customStatement.forInsert(sql);
         int i = 0;
         for (ColumnData columnData : columnsData) {
             Object value = columnData.getValue();

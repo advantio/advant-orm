@@ -17,20 +17,19 @@
 package io.advant.orm.test.dao.impl;
 
 import io.advant.orm.AbstractDAO;
+import io.advant.orm.DBConnection;
 import io.advant.orm.internal.Condition;
 import io.advant.orm.internal.Conditions;
 import io.advant.orm.test.dao.BrandDAO;
 import io.advant.orm.test.entity.BrandEntity;
 import io.advant.orm.test.exception.DataException;
 
-import java.sql.Connection;
-
 /**
  *
  */
 public class BrandDAOImpl extends AbstractDAO<BrandEntity> implements BrandDAO<BrandEntity> {
 
-    public BrandDAOImpl(Connection connection) {
+    public BrandDAOImpl(DBConnection connection) {
         super(connection);
     }
 

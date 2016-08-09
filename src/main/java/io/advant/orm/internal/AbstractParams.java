@@ -1,35 +1,34 @@
 package io.advant.orm.internal;
 
 import io.advant.orm.Params;
+import io.advant.orm.type.DBType;
 
 import java.util.Properties;
 import java.util.Set;
 
 /**
- * Created by Marco on 28/07/2016.
+ * @author Marco Romagnolo
  */
 public class AbstractParams implements Params {
 
-    private String driver;
+    private final DBType dbType;
+    private final String database;
+    private final String user;
+    private final String password;
+    private final Properties properties;
+    private final String driver;
     private String uri;
-    private String user;
-    private String password;
-    private Properties properties;
 
-    public AbstractParams( String user, String password) {
-        this.password = password;
-        this.user = user;
-        configure();
+    public AbstractParams(DBType dbType, String database, String user, String password) {
+        this(dbType, database, user, password, null);
     }
 
-    public AbstractParams(String user, String password, Properties properties) {
+    public AbstractParams(DBType dbType, String database, String user, String password, Properties properties) {
+        this.dbType = dbType;
+        this.driver = dbType.getDriver();
+        this.database = database;
         this.user = user;
         this.password = password;
-        this.properties = properties;
-        configure();
-    }
-
-    private void configure() {
         if (properties == null) {
             properties = new Properties ();
         }
@@ -39,15 +38,32 @@ public class AbstractParams implements Params {
         if (password != null) {
             properties.put("password", password);
         }
+        this.properties = properties;
     }
 
     @Override
-    public String getDriver() {
-        return driver;
+    public DBType getDBType() {
+        return dbType;
     }
 
-    public void setDriver(String driver) {
-        this.driver = driver;
+    @Override
+    public String getDatabase() {
+        return database;
+    }
+
+    @Override
+    public String getUser() {
+        return user;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public Properties getProperties() {
+        return properties;
     }
 
     @Override
@@ -59,28 +75,4 @@ public class AbstractParams implements Params {
         this.uri = uri;
     }
 
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    @Override
-    public Properties getProperties() {
-        return properties;
-    }
-
-    public void setProperties(Properties properties) {
-        this.properties = properties;
-    }
 }

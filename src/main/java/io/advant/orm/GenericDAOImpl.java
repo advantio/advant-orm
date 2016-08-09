@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class GenericDAOImpl<T extends Entity> extends AbstractDAO<T> implements GenericDAO<T> {
 
-    public GenericDAOImpl(Class<T> entityClass, Connection connection) {
+    public GenericDAOImpl(Class<T> entityClass, DBConnection connection) {
         super(entityClass, connection);
     }
 

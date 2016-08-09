@@ -1,13 +1,12 @@
 package io.advant.orm.test.testsuite.h2;
 
 import io.advant.orm.DB;
-import io.advant.orm.DBLocalParams;
+import io.advant.orm.DBConnection;
 import io.advant.orm.exception.ConnectionException;
 import io.advant.orm.exception.OrmException;
 import io.advant.orm.test.testcase.DefaultParams;
 import io.advant.orm.test.testcase.PrintUtil;
 import io.advant.orm.test.testcase.TestDAO;
-import io.advant.orm.type.DBLocalType;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -27,8 +26,7 @@ public class H2TestDAO {
     @BeforeClass
     public static void configure() throws ConnectionException {
         PrintUtil.suite(H2TestDAO.class.getName());
-        DefaultParams defaultParams = new DefaultParams();
-        Connection connection = DB.newInstance(new H2LocalParams(), defaultParams.getEntities()).getConnection();
+        DBConnection connection = DB.newInstance(new H2LocalParams(), DefaultParams.getEntities()).getConnection();
         test = new TestDAO(connection);
     }
 

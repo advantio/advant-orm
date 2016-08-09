@@ -16,15 +16,15 @@
 
 package io.advant.orm;
 
-import io.advant.orm.internal.Condition;
-import io.advant.orm.internal.Conditions;
 import io.advant.orm.exception.OrmException;
 import io.advant.orm.exception.TableParseException;
 import io.advant.orm.internal.*;
 
 import java.lang.reflect.ParameterizedType;
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,18 +35,18 @@ import java.util.logging.Logger;
 public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 
 	private static final Logger LOGGER = Logger.getLogger(AbstractDAO.class.getName());
-	private final Connection connection;
+	private final DBConnection connection;
 	private final Class<T> entityClass;
 	private SqlProcessor sqlProcessor;
 	private EntityConverter<T> converter;
 
-	protected AbstractDAO(Connection connection) {
+	protected AbstractDAO(DBConnection connection) {
 		this.connection = connection;
 		this.entityClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 		loadEntities();
 	}
 
-	AbstractDAO(Class<T> entityClass, Connection connection) {
+	AbstractDAO(Class<T> entityClass, DBConnection connection) {
 		this.connection = connection;
 		this.entityClass = entityClass;
 		loadEntities();
