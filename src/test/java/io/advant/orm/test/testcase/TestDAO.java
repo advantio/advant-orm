@@ -14,13 +14,12 @@ import io.advant.orm.test.entity.ProductCategoryEntity;
 import io.advant.orm.test.entity.ProductEntity;
 import org.junit.Assert;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Marco on 29/07/2016.
+ * @author Marco Romagnolo
  */
 public class TestDAO {
 
@@ -36,19 +35,11 @@ public class TestDAO {
         categoryDAO = new GenericDAOImpl<>(CategoryEntity.class, connection);
     }
 
-    public void deleteAll() throws OrmException {
-        PrintUtil.test("Delete all from tables");
-        brandDAO.deleteAll();
-        productDAO.deleteAll();
-        productCategoryDAO.deleteAll();
-        categoryDAO.deleteAll();
-    }
-
     /**
      * Test Insert
      */
     public void insert() throws OrmException {
-        PrintUtil.test("Insert");
+        PrintUtil.test("DAO - Insert");
 
         // Insert Brands
         PrintUtil.action("Inserting brands");
@@ -150,9 +141,10 @@ public class TestDAO {
 
     /**
      * Find test
+     * @throws OrmException
      */
     public void find() throws OrmException {
-        PrintUtil.test("Find");
+        PrintUtil.test("DAO - Find");
 
         PrintUtil.action("Finding brand");
         BrandEntity brand = brandDAO.find(1000L);
@@ -172,9 +164,10 @@ public class TestDAO {
 
     /**
      * FindAll test
+     * @throws OrmException
      */
     public void findAll() throws OrmException {
-        PrintUtil.test("FindAll");
+        PrintUtil.test("DAO - FindAll");
 
         PrintUtil.action("Finding all products");
         List<ProductEntity> products = productDAO.findAll();
@@ -184,9 +177,10 @@ public class TestDAO {
 
     /**
      * Update test
+     * @throws OrmException
      */
     public void update() throws OrmException {
-        PrintUtil.test("Update");
+        PrintUtil.test("DAO - Update");
 
         PrintUtil.action("Updating brand");
         BrandEntity brand = brandDAO.find(1000L);
@@ -215,9 +209,10 @@ public class TestDAO {
 
     /**
      * Delete Test
+     * @throws OrmException
      */
     public void delete() throws OrmException {
-        PrintUtil.test("Delete");
+        PrintUtil.test("DAO - Delete");
 
         PrintUtil.action("Deleting brand");
         BrandEntity brand = brandDAO.find(1000L);
@@ -226,5 +221,17 @@ public class TestDAO {
         BrandEntity delBrand = brandDAO.find(1000L);
         Assert.assertNull(delBrand);
         PrintUtil.result("Deleted brand:" + brand);
+    }
+
+    /**
+     * Delete All
+     * @throws OrmException
+     */
+    public void deleteAll() throws OrmException {
+        PrintUtil.test("DAO - Delete all from tables");
+        brandDAO.deleteAll();
+        productDAO.deleteAll();
+        productCategoryDAO.deleteAll();
+        categoryDAO.deleteAll();
     }
 }

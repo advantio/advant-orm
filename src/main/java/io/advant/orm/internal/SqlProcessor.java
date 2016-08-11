@@ -20,6 +20,7 @@ import io.advant.orm.AbstractTable;
 import io.advant.orm.DBConnection;
 import io.advant.orm.Entity;
 import io.advant.orm.exception.TableParseException;
+import io.advant.orm.exception.UnsynchronizedException;
 
 import java.sql.*;
 import java.util.*;
@@ -141,12 +142,18 @@ public class SqlProcessor {
         rs.close();
     }
 
-    public <T extends Entity> int update(T entity, List<ColumnData> columnsData) throws IllegalAccessException, SQLException {
+    public <T extends Entity> int update(T entity, List<ColumnData> columnsData) throws IllegalAccessException, SQLException, UnsynchronizedException {
         String sql = "UPDATE " + reflect.getTable() + " SET ";
+        Long id = null;
         for (ColumnData columnData : columnsData) {
-            if(!columnData.isId()){
+            if(columnData.isId()){
+                id = (Long) columnData.getValue();
+            } else {
                 sql += columnData.getColumn() + " = ?,";
             }
+        }
+        if (id == null) {
+            throw new UnsynchronizedException();
         }
         sql = sql.substring(0, sql.length()-1);
         sql += " WHERE id = ?";
@@ -155,23 +162,31 @@ public class SqlProcessor {
         for (ColumnData columnData : columnsData) {
             if (!columnData.isId()) {
                 if (columnData.isVersion()) {
-                    long version = ((Long) columnData.getValue()) + 1L;
-                    pstmt.setLong(++i, version);
+                    Long version = (Long) columnData.getValue();
+                    if (version == null) {
+                        throw new UnsynchronizedException();
+                    }
+                    pstmt.setLong(++i, ++version);
                     entity.setVersion(version);
                 } else {
                     ValueBridge.setStatement(pstmt, ++i, columnData.getValueType(), columnData.getValue());
                 }
             }
         }
-        long idValue = ((AbstractTable) entity).getLastId();
-        pstmt.setLong(++i, idValue);
+        Long lastId = ((AbstractTable) entity).getLastId();
+        id = lastId == null ? id : lastId;
+        pstmt.setLong(++i, id);
         return pstmt.executeUpdate();
     }
 
-    public <T extends Entity> int delete(T entity) throws SQLException {
+    public <T extends Entity> int delete(T entity) throws SQLException, UnsynchronizedException {
         String sql = "DELETE FROM " + reflect.getTable() + " WHERE id=?";
         pstmt = connection.prepareStatement(sql);
-        pstmt.setObject(1, (entity).getId());
+        Long id = (entity).getId();
+        if (id == null) {
+            throw new UnsynchronizedException();
+        }
+        pstmt.setObject(1, id);
         return pstmt.executeUpdate();
     }
 

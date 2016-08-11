@@ -9,11 +9,11 @@ import java.sql.Connection;
 /**
  *
  */
-public class TestCreateDB {
+public class TestCreateTables {
 
     private Connection connection;
 
-    public TestCreateDB(Connection connection) {
+    public TestCreateTables(Connection connection) {
         this.connection = connection;
     }
 

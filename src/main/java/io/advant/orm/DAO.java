@@ -19,12 +19,9 @@ package io.advant.orm;
 import io.advant.orm.exception.OrmException;
 import io.advant.orm.internal.Conditions;
 
-import java.sql.ResultSet;
 import java.util.List;
 
 public interface DAO<T> {
-
-    void close() throws OrmException;
 
     int deleteAll() throws OrmException;
 
@@ -41,4 +38,12 @@ public interface DAO<T> {
     T find(Long id) throws OrmException;
 
     T find(Conditions conditions) throws OrmException;
+
+    boolean isAutoCommit() throws OrmException;
+
+    void setAutoCommit(boolean autoCommit) throws OrmException;
+
+    void commit() throws OrmException;
+
+    void rollback();
 }

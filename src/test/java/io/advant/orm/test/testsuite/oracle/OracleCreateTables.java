@@ -5,7 +5,7 @@ import io.advant.orm.exception.ConnectionException;
 import io.advant.orm.exception.OrmException;
 import io.advant.orm.test.testcase.DefaultParams;
 import io.advant.orm.test.testcase.PrintUtil;
-import io.advant.orm.test.testcase.TestCreateDB;
+import io.advant.orm.test.testcase.TestCreateTables;
 import io.advant.orm.type.DBType;
 import org.junit.AfterClass;
 import org.junit.Assume;
@@ -17,13 +17,13 @@ import java.sql.Connection;
 /**
  * @author Marco Romagnolo
  */
-public class OracleCreateDB {
+public class OracleCreateTables {
 
-    private static TestCreateDB test;
+    private static TestCreateTables test;
 
     @BeforeClass
     public static void connect() {
-        PrintUtil.suite(OracleCreateDB.class.getName());
+        PrintUtil.suite(OracleCreateTables.class.getName());
         try {
             Class.forName(DBType.ORACLE.getDriver());
         } catch (ClassNotFoundException e) {
@@ -35,7 +35,7 @@ public class OracleCreateDB {
         } catch (ConnectionException e) {
             Assume.assumeTrue("Connection to Oracle database is not available [not mandatory]", false);
         }
-        test = new TestCreateDB(connection);
+        test = new TestCreateTables(connection);
     }
 
     @Test

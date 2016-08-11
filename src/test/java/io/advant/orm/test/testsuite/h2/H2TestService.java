@@ -3,10 +3,11 @@ package io.advant.orm.test.testsuite.h2;
 import io.advant.orm.DB;
 import io.advant.orm.DBConnection;
 import io.advant.orm.exception.ConnectionException;
-import io.advant.orm.exception.OrmException;
+import io.advant.orm.test.service.ServiceException;
 import io.advant.orm.test.testcase.DefaultParams;
 import io.advant.orm.test.testcase.PrintUtil;
-import io.advant.orm.test.testcase.TestDAO;
+import io.advant.orm.test.testcase.TestService;
+import io.advant.orm.test.testsuite.derby.DerbyLocalParams;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -17,44 +18,49 @@ import org.junit.runners.MethodSorters;
  * @author Marco Romagnolo
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class H2TestDAO {
+public class H2TestService {
 
-    private static TestDAO test;
+    private static TestService test;
 
     @BeforeClass
     public static void configure() throws ConnectionException {
-        PrintUtil.suite(H2TestDAO.class.getName());
+        PrintUtil.suite(H2TestService.class.getName());
         DBConnection connection = DB.newInstance(new H2LocalParams(), DefaultParams.getEntities()).getConnection();
-        test = new TestDAO(connection);
+        test = new TestService(connection);
     }
 
     @Test
-    public void test1_insert() throws OrmException {
+    public void test1_insert() throws ServiceException {
         test.insert();
     }
 
     @Test
-    public void test2_findAll() throws OrmException {
+    public void test2_findAll() throws ServiceException {
         test.findAll();
     }
 
     @Test
-    public void test3_find() throws OrmException {
+    public void test3_find() throws ServiceException {
         test.find();
     }
 
     @Test
-    public void test4_update() throws OrmException {
+    public void test4_update() throws ServiceException {
         test.update();
     }
 
     @Test
-    public void test5_delete() throws OrmException {
+    public void test5_save() throws ServiceException {
+        test.save();
+    }
+
+    @Test
+    public void test6_delete() throws ServiceException {
         test.delete();
     }
 
     @Test
-    public void test6_deleteAll() throws OrmException {
+    public void test7_deleteAll() throws ServiceException {
         test.deleteAll();
     }
 

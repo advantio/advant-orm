@@ -3,7 +3,6 @@ package io.advant.orm;
 import io.advant.orm.exception.OrmException;
 import io.advant.orm.internal.ExecuteBatch;
 import io.advant.orm.internal.ExecuteUpdate;
-import io.advant.orm.internal.SqlProcessor;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

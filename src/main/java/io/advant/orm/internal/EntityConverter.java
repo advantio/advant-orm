@@ -200,7 +200,7 @@ public class EntityConverter<T extends Entity> {
      * @param column String name of a column
      * @return String composed with table_column
      */
-    public String getColumnName(String tableIndex, String column) {
+    public static String getColumnName(String tableIndex, String column) {
         return tableIndex + "_" + column;
     }
 

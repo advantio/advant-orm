@@ -19,7 +19,6 @@ package io.advant.orm;
 import io.advant.orm.exception.OrmException;
 import io.advant.orm.internal.Conditions;
 
-import java.sql.Connection;
 import java.util.List;
 
 /**

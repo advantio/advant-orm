@@ -21,8 +21,13 @@ package io.advant.orm.exception;
  */
 public class OrmException extends Exception {
 
+    public OrmException(String message) {
+        super(message);
+    }
+
     public OrmException(Exception e) {
         super(e);
     }
+
 
 }

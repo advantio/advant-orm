@@ -9,11 +9,11 @@ import java.sql.Connection;
 /**
  * @author Marco Romagnolo
  */
-public class TestDropDB {
+public class TestDropTables {
 
     private final Connection connection;
 
-    public TestDropDB(Connection connection) {
+    public TestDropTables(Connection connection) {
         this.connection = connection;
     }
 

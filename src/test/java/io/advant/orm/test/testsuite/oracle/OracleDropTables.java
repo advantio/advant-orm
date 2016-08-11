@@ -1,11 +1,11 @@
-package io.advant.orm.test.testsuite.ibmdb2;
+package io.advant.orm.test.testsuite.oracle;
 
 import io.advant.orm.DB;
 import io.advant.orm.exception.ConnectionException;
 import io.advant.orm.exception.OrmException;
 import io.advant.orm.test.testcase.DefaultParams;
 import io.advant.orm.test.testcase.PrintUtil;
-import io.advant.orm.test.testcase.TestCreateDB;
+import io.advant.orm.test.testcase.TestDropTables;
 import io.advant.orm.type.DBType;
 import org.junit.AfterClass;
 import org.junit.Assume;
@@ -17,40 +17,34 @@ import java.sql.Connection;
 /**
  * @author Marco Romagnolo
  */
-public class IBMDB2CreateDB {
+public class OracleDropTables {
 
-    private static TestCreateDB test;
+    private static TestDropTables test;
 
     @BeforeClass
     public static void connect() throws ConnectionException {
-        PrintUtil.suite(IBMDB2CreateDB.class.getName());
+        PrintUtil.suite(OracleDropTables.class.getName());
         try {
-            Class.forName(DBType.IBMDB2.getDriver());
+            Class.forName(DBType.ORACLE.getDriver());
         } catch (ClassNotFoundException e) {
-            Assume.assumeTrue("DB2 Driver not available [not mandatory]", false);
+            Assume.assumeTrue("Oracle Driver not available [not mandatory]", false);
         }
         Connection connection = null;
         try {
-            connection = DB.newInstance(new IBMDB2HostParams(), DefaultParams.getEntities()).getConnection();
+            connection = DB.newInstance(new OracleHostParams(), DefaultParams.getEntities()).getConnection();
         } catch (ConnectionException e) {
-            Assume.assumeTrue("Connection to IBM DB2 database is not available [not mandatory]", false);
+            Assume.assumeTrue("Connection to Oracle database is not available [not mandatory]", false);
         }
-        test = new TestCreateDB(connection);
+        test = new TestDropTables(connection);
     }
 
     @Test
-    public void create() throws OrmException {
-        test.create("IBMDB2");
+    public void drop() throws OrmException {
+        test.drop("ORACLE");
     }
-
-//    @Test
-//    public void procedure() throws OrmException {
-//        test.procedure("IBMDB2");
-//    }
 
     @AfterClass
     public static void disconnect() throws ConnectionException {
         DB.getInstance().disconnect();
     }
-
 }

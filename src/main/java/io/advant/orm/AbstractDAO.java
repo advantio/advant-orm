@@ -18,6 +18,7 @@ package io.advant.orm;
 
 import io.advant.orm.exception.OrmException;
 import io.advant.orm.exception.TableParseException;
+import io.advant.orm.exception.UnsynchronizedException;
 import io.advant.orm.internal.*;
 
 import java.lang.reflect.ParameterizedType;
@@ -37,7 +38,7 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 	private static final Logger LOGGER = Logger.getLogger(AbstractDAO.class.getName());
 	private final DBConnection connection;
 	private final Class<T> entityClass;
-	private SqlProcessor sqlProcessor;
+    private SqlProcessor sqlProcessor;
 	private EntityConverter<T> converter;
 
 	protected AbstractDAO(DBConnection connection) {
@@ -47,7 +48,7 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 	}
 
 	AbstractDAO(Class<T> entityClass, DBConnection connection) {
-		this.connection = connection;
+        this.connection = connection;
 		this.entityClass = entityClass;
 		loadEntities();
 	}
@@ -66,13 +67,11 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 		return connection;
 	}
 
-	@Override
-	public void close() throws OrmException {
+	protected void close() {
 		try {
             sqlProcessor.close();
 		} catch (SQLException e) {
 			LOGGER.log(Level.SEVERE, e.getMessage(), e);
-			throw new OrmException(e);
 		}
 	}
 
@@ -104,7 +103,7 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 	public int update(T entity) throws OrmException {
 		try {
 			return sqlProcessor.update(entity, fromEntity(entity));
-		} catch (SQLException | IllegalAccessException e) {
+		} catch (SQLException | IllegalAccessException | UnsynchronizedException e) {
 			LOGGER.log(Level.SEVERE, e.getMessage(), e);
 			throw new OrmException(e);
 		} finally {
@@ -118,10 +117,18 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
             Integer result = null;
 			Conditions conditions = new Conditions(new Condition(entityClass, "id", (entity).getId()));
 			ResultSet resultSet = sqlProcessor.select(conditions);
-			Long id = null;
-			while (resultSet.next()) {
-				id = resultSet.getLong("id");
+			// Set Id and Version table column name
+            String tableIndex = EntityReflect.getInstance(entityClass).getTableIndex();
+            String columnNameId = EntityConverter.getColumnName(tableIndex, "id");
+            String columnNameVersion = EntityConverter.getColumnName(tableIndex, "version");
+            Long id = null;
+            Long version = null;
+            if (resultSet.next()) {
+                id = resultSet.getLong(columnNameId);
+                version = resultSet.getLong(columnNameVersion);
 			}
+            entity.setId(id);
+            entity.setVersion(version);
 			List<ColumnData> columns = fromEntity(entity);
 			if (id==null) {
 				sqlProcessor.insert(entity, columns);
@@ -129,7 +136,7 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
                 result = sqlProcessor.update(entity, columns);
 			}
             return result;
-		} catch (SQLException | IllegalAccessException | TableParseException | NoSuchFieldException e) {
+		} catch (SQLException | IllegalAccessException | TableParseException | NoSuchFieldException | UnsynchronizedException e) {
 			LOGGER.log(Level.SEVERE, e.getMessage(), e);
 			throw new OrmException(e);
 		} finally {
@@ -141,7 +148,7 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 	public int delete(T entity) throws OrmException {
 		try {
 			return sqlProcessor.delete(entity);
-		} catch (SQLException e) {
+		} catch (SQLException | UnsynchronizedException e) {
 			LOGGER.log(Level.SEVERE, e.getMessage(), e);
 			throw new OrmException(e);
 		} finally {
@@ -179,6 +186,45 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 			close();
 		}
 	}
+
+    @Override
+    public boolean isAutoCommit() throws OrmException {
+        try {
+            return connection.getAutoCommit();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            throw new OrmException(e);
+        }
+    }
+
+    @Override
+    public void setAutoCommit(boolean autoCommit) throws OrmException {
+        try {
+            connection.setAutoCommit(autoCommit);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            throw new OrmException(e);
+        }
+    }
+
+    @Override
+    public void commit() throws OrmException {
+        try {
+            connection.commit();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            throw new OrmException(e);
+        }
+    }
+
+    @Override
+    public void rollback() {
+        try {
+            connection.rollback();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+        }
+    }
 
     protected T toEntity(ResultSet rs) throws OrmException {
 		try {

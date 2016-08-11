@@ -1,73 +1,56 @@
 package io.advant.orm.test.testsuite.ibmdb2;
 
 import io.advant.orm.DB;
-import io.advant.orm.DBConnection;
 import io.advant.orm.exception.ConnectionException;
 import io.advant.orm.exception.OrmException;
 import io.advant.orm.test.testcase.DefaultParams;
 import io.advant.orm.test.testcase.PrintUtil;
-import io.advant.orm.test.testcase.TestDAO;
+import io.advant.orm.test.testcase.TestCreateTables;
 import io.advant.orm.type.DBType;
-import org.junit.*;
-import org.junit.runners.MethodSorters;
+import org.junit.AfterClass;
+import org.junit.Assume;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.sql.Connection;
 
 /**
  * @author Marco Romagnolo
  */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class IBMDB2TestDAO {
+public class IBMDB2CreateTables {
 
-    private static TestDAO test;
+    private static TestCreateTables test;
 
     @BeforeClass
-    public static void configure() throws ConnectionException {
-        PrintUtil.suite(IBMDB2TestDAO.class.getName());
+    public static void connect() throws ConnectionException {
+        PrintUtil.suite(IBMDB2CreateTables.class.getName());
         try {
             Class.forName(DBType.IBMDB2.getDriver());
         } catch (ClassNotFoundException e) {
             Assume.assumeTrue("DB2 Driver not available [not mandatory]", false);
         }
-        DBConnection connection = null;
+        Connection connection = null;
         try {
             connection = DB.newInstance(new IBMDB2HostParams(), DefaultParams.getEntities()).getConnection();
         } catch (ConnectionException e) {
             Assume.assumeTrue("Connection to IBM DB2 database is not available [not mandatory]", false);
         }
-        test = new TestDAO(connection);
+        test = new TestCreateTables(connection);
     }
 
     @Test
-    public void test1_insert() throws OrmException {
-        test.insert();
+    public void create() throws OrmException {
+        test.create("IBMDB2");
     }
 
-    @Test
-    public void test2_findAll() throws OrmException {
-        test.findAll();
-    }
-
-    @Test
-    public void test3_find() throws OrmException {
-        test.find();
-    }
-
-    @Test
-    public void test4_update() throws OrmException {
-        test.update();
-    }
-
-    @Test
-    public void test5_delete() throws OrmException {
-        test.delete();
-    }
-
-    @Test
-    public void test6_deleteAll() throws OrmException {
-        test.deleteAll();
-    }
+//    @Test
+//    public void procedure() throws OrmException {
+//        test.procedure("IBMDB2");
+//    }
 
     @AfterClass
     public static void disconnect() throws ConnectionException {
         DB.getInstance().disconnect();
     }
+
 }
