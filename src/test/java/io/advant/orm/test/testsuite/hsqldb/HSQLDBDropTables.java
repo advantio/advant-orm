@@ -1,9 +1,8 @@
 package io.advant.orm.test.testsuite.hsqldb;
 
-import io.advant.orm.DB;
+import io.advant.orm.DBFactory;
 import io.advant.orm.exception.ConnectionException;
 import io.advant.orm.exception.OrmException;
-import io.advant.orm.test.testcase.DefaultParams;
 import io.advant.orm.test.testcase.PrintUtil;
 import io.advant.orm.test.testcase.TestDropTables;
 import org.junit.AfterClass;
@@ -22,7 +21,7 @@ public class HSQLDBDropTables {
     @BeforeClass
     public static void connect() throws ConnectionException {
         PrintUtil.suite(HSQLDBDropTables.class.getName());
-        Connection connection = DB.newInstance(new HSQLDBLocalParams(), DefaultParams.getEntities()).getConnection();
+        Connection connection = DBFactory.newInstance(new HSQLDBConfig()).getConnection();
         test = new TestDropTables(connection);
     }
 
@@ -33,6 +32,6 @@ public class HSQLDBDropTables {
 
     @AfterClass
     public static void disconnect() throws ConnectionException {
-        DB.getInstance().disconnect();
+        DBFactory.getInstance().disconnect();
     }
 }

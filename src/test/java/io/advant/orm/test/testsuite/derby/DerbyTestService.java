@@ -1,10 +1,9 @@
 package io.advant.orm.test.testsuite.derby;
 
-import io.advant.orm.DB;
+import io.advant.orm.DBFactory;
 import io.advant.orm.DBConnection;
 import io.advant.orm.exception.ConnectionException;
 import io.advant.orm.test.service.ServiceException;
-import io.advant.orm.test.testcase.DefaultParams;
 import io.advant.orm.test.testcase.PrintUtil;
 import io.advant.orm.test.testcase.TestService;
 import org.junit.AfterClass;
@@ -24,7 +23,7 @@ public class DerbyTestService {
     @BeforeClass
     public static void configure() throws ConnectionException {
         PrintUtil.suite(DerbyTestService.class.getName());
-        DBConnection connection = DB.newInstance(new DerbyLocalParams(), DefaultParams.getEntities()).getConnection();
+        DBConnection connection = DBFactory.newInstance(new DerbyConfig()).getConnection();
         test = new TestService(connection);
     }
 
@@ -65,6 +64,6 @@ public class DerbyTestService {
 
     @AfterClass
     public static void disconnect() throws ConnectionException {
-        DB.getInstance().disconnect();
+        DBFactory.getInstance().disconnect();
     }
 }

@@ -33,11 +33,13 @@ public interface DAO<T> {
 
     int delete(T object) throws OrmException;
 
+    int delete(Conditions conditions) throws OrmException;
+
     List<T> findAll() throws OrmException;
 
     T find(Long id) throws OrmException;
 
-    T find(Conditions conditions) throws OrmException;
+    List<T> find(Conditions conditions) throws OrmException;
 
     boolean isAutoCommit() throws OrmException;
 

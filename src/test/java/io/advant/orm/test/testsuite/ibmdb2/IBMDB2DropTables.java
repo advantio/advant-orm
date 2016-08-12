@@ -1,9 +1,8 @@
 package io.advant.orm.test.testsuite.ibmdb2;
 
-import io.advant.orm.DB;
+import io.advant.orm.DBFactory;
 import io.advant.orm.exception.ConnectionException;
 import io.advant.orm.exception.OrmException;
-import io.advant.orm.test.testcase.DefaultParams;
 import io.advant.orm.test.testcase.PrintUtil;
 import io.advant.orm.test.testcase.TestDropTables;
 import io.advant.orm.type.DBType;
@@ -31,7 +30,7 @@ public class IBMDB2DropTables {
         }
         Connection connection = null;
         try {
-            connection = DB.newInstance(new IBMDB2HostParams(), DefaultParams.getEntities()).getConnection();
+            connection = DBFactory.newInstance(new IBMDB2Config()).getConnection();
         } catch (ConnectionException e) {
             Assume.assumeTrue("Connection to IBM DB2 database is not available [not mandatory]", false);
         }
@@ -45,6 +44,6 @@ public class IBMDB2DropTables {
 
     @AfterClass
     public static void disconnect() throws ConnectionException {
-        DB.getInstance().disconnect();
+        DBFactory.getInstance().disconnect();
     }
 }

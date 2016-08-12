@@ -1,13 +1,11 @@
 package io.advant.orm.test.testsuite.hsqldb;
 
-import io.advant.orm.DB;
+import io.advant.orm.DBFactory;
 import io.advant.orm.DBConnection;
 import io.advant.orm.exception.ConnectionException;
 import io.advant.orm.test.service.ServiceException;
-import io.advant.orm.test.testcase.DefaultParams;
 import io.advant.orm.test.testcase.PrintUtil;
 import io.advant.orm.test.testcase.TestPerformance;
-import io.advant.orm.test.testcase.TestService;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -25,7 +23,7 @@ public class HSQLDBTestPerformance {
     @BeforeClass
     public static void configure() throws ConnectionException {
         PrintUtil.suite(HSQLDBTestPerformance.class.getName());
-        DBConnection connection = DB.newInstance(new HSQLDBLocalParams(), DefaultParams.getEntities()).getConnection();
+        DBConnection connection = DBFactory.newInstance(new HSQLDBConfig()).getConnection();
         test = new TestPerformance(connection);
     }
 
@@ -36,6 +34,6 @@ public class HSQLDBTestPerformance {
 
     @AfterClass
     public static void disconnect() throws ConnectionException {
-        DB.getInstance().disconnect();
+        DBFactory.getInstance().disconnect();
     }
 }

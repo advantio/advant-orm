@@ -190,6 +190,20 @@ public class SqlProcessor {
         return pstmt.executeUpdate();
     }
 
+    public int delete(Conditions conditions) throws SQLException {
+        String sql = "DELETE FROM " + reflect.getTable();
+        if (conditions == null) {
+            return deleteAll();
+        }
+        sql += " WHERE " + conditions.asSQL() + " ";
+        pstmt = connection.prepareStatement(sql);
+        int i = 0;
+        for (Condition condition : conditions.getList()) {
+            pstmt.setObject(++i, condition.getValue());
+        }
+        return pstmt.executeUpdate();
+    }
+
     public void close() throws SQLException {
         if (pstmt != null) {
             pstmt.close();

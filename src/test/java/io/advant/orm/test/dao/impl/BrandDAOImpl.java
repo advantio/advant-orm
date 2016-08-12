@@ -24,6 +24,8 @@ import io.advant.orm.internal.Conditions;
 import io.advant.orm.test.dao.BrandDAO;
 import io.advant.orm.test.entity.BrandEntity;
 
+import java.util.List;
+
 /**
  *
  */
@@ -37,7 +39,8 @@ public class BrandDAOImpl extends AbstractDAO<BrandEntity> implements BrandDAO<B
     public BrandEntity findByUserId(Integer userId) throws OrmException {
         try {
             Conditions conditions = new Conditions(new Condition(BrandEntity.class, "userId", userId));
-            return find(conditions);
+            List<BrandEntity> entities = find(conditions);
+            return entities.get(1);
         } catch (Exception e) {
             throw new OrmException(e);
         }
@@ -47,7 +50,8 @@ public class BrandDAOImpl extends AbstractDAO<BrandEntity> implements BrandDAO<B
     public BrandEntity findByUsername(String username) throws OrmException {
         try {
             Conditions conditions = new Conditions(new Condition(BrandEntity.class, "username", username));
-            return find(conditions);
+            List<BrandEntity> entities = find(conditions);
+            return entities.get(1);
         } catch (Exception e) {
             throw new OrmException(e);
         }
@@ -57,7 +61,8 @@ public class BrandDAOImpl extends AbstractDAO<BrandEntity> implements BrandDAO<B
     public BrandEntity findByEmail(String email) throws OrmException {
         try {
             Conditions conditions = new Conditions(new Condition(BrandEntity.class, "email", email));
-            return find(conditions);
+            List<BrandEntity> entities = find(conditions);
+            return entities.get(1);
         } catch (Exception e) {
             throw new OrmException(e);
         }

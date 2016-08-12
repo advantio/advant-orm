@@ -1,13 +1,11 @@
 package io.advant.orm.test.testsuite.mysql;
 
-import io.advant.orm.DB;
+import io.advant.orm.DBFactory;
 import io.advant.orm.DBConnection;
 import io.advant.orm.exception.ConnectionException;
 import io.advant.orm.test.service.ServiceException;
-import io.advant.orm.test.testcase.DefaultParams;
 import io.advant.orm.test.testcase.PrintUtil;
 import io.advant.orm.test.testcase.TestService;
-import io.advant.orm.test.testsuite.h2.H2LocalParams;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -25,7 +23,7 @@ public class MysqlTestService {
     @BeforeClass
     public static void configure() throws ConnectionException {
         PrintUtil.suite(MysqlTestService.class.getName());
-        DBConnection connection = DB.newInstance(new MysqlHostParams(), DefaultParams.getEntities()).getConnection();
+        DBConnection connection = DBFactory.newInstance(new MysqlConfig()).getConnection();
         test = new TestService(connection);
     }
 
@@ -66,6 +64,6 @@ public class MysqlTestService {
 
     @AfterClass
     public static void disconnect() throws ConnectionException {
-        DB.getInstance().disconnect();
+        DBFactory.getInstance().disconnect();
     }
 }

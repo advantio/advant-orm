@@ -156,6 +156,18 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 		}
 	}
 
+    @Override
+    public int delete(Conditions conditions) throws OrmException {
+        try {
+            return sqlProcessor.delete(conditions);
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            throw new OrmException(e);
+        } finally {
+            close();
+        }
+    }
+
 	@Override
 	public List<T> findAll() throws OrmException {
 		try {
@@ -171,14 +183,23 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 
     @Override
 	public T find(Long id) throws OrmException {
-		return find(new Conditions(new Condition(entityClass, "id", id)));
+        try {
+            Conditions conditions = new Conditions(new Condition(entityClass, "id", id));
+            ResultSet rs = sqlProcessor.select(conditions);
+            return toEntity(rs);
+        } catch (TableParseException | NoSuchFieldException | SQLException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            throw new OrmException(e);
+        } finally {
+            close();
+        }
 	}
 
 	@Override
-	public T find(Conditions conditions) throws OrmException {
+	public List<T> find(Conditions conditions) throws OrmException {
 		try {
 			ResultSet rs = sqlProcessor.select(conditions);
-			return toEntity(rs);
+			return toEntities(rs);
 		} catch (TableParseException | NoSuchFieldException | SQLException e) {
 			LOGGER.log(Level.SEVERE, e.getMessage(), e);
 			throw new OrmException(e);

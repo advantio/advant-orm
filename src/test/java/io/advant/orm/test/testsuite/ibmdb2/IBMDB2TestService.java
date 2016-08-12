@@ -1,13 +1,11 @@
 package io.advant.orm.test.testsuite.ibmdb2;
 
-import io.advant.orm.DB;
+import io.advant.orm.DBFactory;
 import io.advant.orm.DBConnection;
 import io.advant.orm.exception.ConnectionException;
 import io.advant.orm.test.service.ServiceException;
-import io.advant.orm.test.testcase.DefaultParams;
 import io.advant.orm.test.testcase.PrintUtil;
 import io.advant.orm.test.testcase.TestService;
-import io.advant.orm.test.testsuite.h2.H2LocalParams;
 import io.advant.orm.type.DBType;
 import org.junit.*;
 import org.junit.runners.MethodSorters;
@@ -30,7 +28,7 @@ public class IBMDB2TestService {
         }
         DBConnection connection = null;
         try {
-            connection = DB.newInstance(new IBMDB2HostParams(), DefaultParams.getEntities()).getConnection();
+            connection = DBFactory.newInstance(new IBMDB2Config()).getConnection();
         } catch (ConnectionException e) {
             Assume.assumeTrue("Connection to IBM DB2 database is not available [not mandatory]", false);
         }
@@ -74,6 +72,6 @@ public class IBMDB2TestService {
 
     @AfterClass
     public static void disconnect() throws ConnectionException {
-        DB.getInstance().disconnect();
+        DBFactory.getInstance().disconnect();
     }
 }

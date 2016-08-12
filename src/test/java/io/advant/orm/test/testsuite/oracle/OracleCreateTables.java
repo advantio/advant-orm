@@ -1,9 +1,8 @@
 package io.advant.orm.test.testsuite.oracle;
 
-import io.advant.orm.DB;
+import io.advant.orm.DBFactory;
 import io.advant.orm.exception.ConnectionException;
 import io.advant.orm.exception.OrmException;
-import io.advant.orm.test.testcase.DefaultParams;
 import io.advant.orm.test.testcase.PrintUtil;
 import io.advant.orm.test.testcase.TestCreateTables;
 import io.advant.orm.type.DBType;
@@ -31,7 +30,7 @@ public class OracleCreateTables {
         }
         Connection connection = null;
         try {
-            connection = DB.newInstance(new OracleHostParams(), DefaultParams.getEntities()).getConnection();
+            connection = DBFactory.newInstance(new OracleConfig()).getConnection();
         } catch (ConnectionException e) {
             Assume.assumeTrue("Connection to Oracle database is not available [not mandatory]", false);
         }
@@ -50,7 +49,7 @@ public class OracleCreateTables {
 
     @AfterClass
     public static void disconnect() throws ConnectionException {
-        DB.getInstance().disconnect();
+        DBFactory.getInstance().disconnect();
     }
 
 }

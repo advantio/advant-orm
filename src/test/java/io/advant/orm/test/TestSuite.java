@@ -16,12 +16,14 @@
 
 package io.advant.orm.test;
 
+import io.advant.orm.test.testcase.TestFunctions;
 import io.advant.orm.test.testsuite.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+        TestFunctions.class,
         DerbySuite.class,
         H2Suite.class,
         HSQLDBSuite.class,
