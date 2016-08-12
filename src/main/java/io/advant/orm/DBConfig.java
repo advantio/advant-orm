@@ -3,12 +3,12 @@ package io.advant.orm;
 import io.advant.orm.internal.DBConnectionParams;
 import io.advant.orm.type.DBType;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,19 +39,19 @@ public class DBConfig {
             configProps.load(inputStream);
             configureProperties(configProps);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
     private void configureProperties(Properties configProps) {
-        datasource = properties.getProperty("db.datasource");
+        datasource = configProps.getProperty("datasource");
         dbType = DBType.valueOf(configProps.getProperty("db.type").toUpperCase());
         driver = dbType.getDriver();
         host = configProps.getProperty("db.host");
         port = Integer.valueOf(configProps.getProperty("db.port", "0"));
         database = configProps.getProperty("db.database");
-        user = configProps.getProperty("db.user");
-        password = configProps.getProperty("db.password");
+        user = configProps.getProperty("db.user", null);
+        password = configProps.getProperty("db.password", null);
         Enumeration enumKey = configProps.keys();
         while (enumKey.hasMoreElements()) {
             String key = (String) enumKey.nextElement();
@@ -90,10 +90,6 @@ public class DBConfig {
         this.password = password;
     }
 
-    public DataSource getDatasource() throws NamingException {
-        return (DataSource) new InitialContext().lookup(datasource);
-    }
-
     public DBConnectionParams getParams() {
         if (properties == null) {
             properties = new Properties();
@@ -105,6 +101,11 @@ public class DBConfig {
             properties.put("password", password);
         }
         return new DBConnectionParams() {
+
+            @Override
+            public String getDataSource() {
+                return datasource;
+            }
 
             @Override
             public String getUri() {
@@ -144,6 +145,14 @@ public class DBConfig {
                 LOGGER.log(Level.SEVERE, "DBType not known or isn't a Local connection");
                 return null;
         }
+    }
+
+    public String getDatasource() {
+        return datasource;
+    }
+
+    public void setDatasource(String datasource) {
+        this.datasource = datasource;
     }
 
     public DBType getDbType() {

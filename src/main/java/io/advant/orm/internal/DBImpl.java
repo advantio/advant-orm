@@ -6,6 +6,9 @@ import io.advant.orm.DBConnection;
 import io.advant.orm.exception.ConnectionException;
 import io.advant.orm.exception.TableParseException;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -19,12 +22,10 @@ public class DBImpl implements DB {
 
     private static final Logger LOGGER = Logger.getLogger(DBImpl.class.getName());
     private final DBConfig config;
-    private final DBConnectionParams params;
     private DBConnection connection;
 
     public DBImpl(DBConfig config) {
         this.config = config;
-        this.params = config.getParams();
         try {
             // Configure Driver Loading for JDBC
             Class.forName(config.getDriver());
@@ -40,7 +41,18 @@ public class DBImpl implements DB {
 
     @Override
     public void connect() throws SQLException {
-        Connection conn = DriverManager.getConnection(params.getUri(), params.getProperties());
+        DBConnectionParams params = config.getParams();
+        Connection conn = null;
+        if (params.getDataSource() != null) {
+            try {
+                DataSource ds = (DataSource) new InitialContext().lookup(params.getDataSource());
+                conn =ds.getConnection();
+            } catch (NamingException e) {
+                LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            }
+        } else {
+            conn = DriverManager.getConnection(params.getUri(), params.getProperties());
+        }
         connection = new DBConnection(conn, config.getDbType());
     }
 
