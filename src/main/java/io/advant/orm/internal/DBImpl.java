@@ -22,6 +22,7 @@ public class DBImpl implements DB {
 
     private static final Logger LOGGER = Logger.getLogger(DBImpl.class.getName());
     private final DBConfig config;
+    private DataSource datasource;
     private DBConnection connection;
 
     public DBImpl(DBConfig config) {
@@ -40,17 +41,24 @@ public class DBImpl implements DB {
     }
 
     @Override
-    public void connect() throws SQLException {
-        DBConnectionParams params = config.getParams();
-        Connection conn = null;
-        if (params.getDataSource() != null) {
+    public DataSource getDataSource() {
+        if (datasource == null) {
             try {
-                DataSource ds = (DataSource) new InitialContext().lookup(params.getDataSource());
-                conn =ds.getConnection();
+                 datasource = (DataSource) new InitialContext().lookup(config.getDatasource());
             } catch (NamingException e) {
                 LOGGER.log(Level.SEVERE, e.getMessage(), e);
             }
+        }
+        return datasource;
+    }
+
+    @Override
+    public void connect() throws SQLException {
+        Connection conn;
+        if (config.getDatasource() != null) {
+            conn = getDataSource().getConnection();
         } else {
+            DBConnectionParams params = config.getParams();
             conn = DriverManager.getConnection(params.getUri(), params.getProperties());
         }
         connection = new DBConnection(conn, config.getDbType());

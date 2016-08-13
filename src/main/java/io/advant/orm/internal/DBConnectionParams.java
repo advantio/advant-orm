@@ -7,8 +7,6 @@ import java.util.Properties;
  */
 public interface DBConnectionParams {
 
-    String getDataSource();
-
     String getUri();
 
     Properties getProperties();

@@ -3,6 +3,7 @@ package io.advant.orm;
 import io.advant.orm.internal.DBConnectionParams;
 import io.advant.orm.type.DBType;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -86,8 +87,8 @@ public class DBConfig {
         this.driver = dbType.getDriver();
         this.dbType = dbType;
         this.database = database;
-        this.user = user == null ? "" : user;
-        this.password = password == null ? "" : password;
+        this.user = user;
+        this.password = password;
     }
 
     public DBConnectionParams getParams() {
@@ -101,11 +102,6 @@ public class DBConfig {
             properties.put("password", password);
         }
         return new DBConnectionParams() {
-
-            @Override
-            public String getDataSource() {
-                return datasource;
-            }
 
             @Override
             public String getUri() {

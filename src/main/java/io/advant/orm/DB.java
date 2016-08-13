@@ -2,6 +2,7 @@ package io.advant.orm;
 
 import io.advant.orm.exception.ConnectionException;
 
+import javax.sql.DataSource;
 import java.sql.SQLException;
 
 /**
@@ -10,6 +11,8 @@ import java.sql.SQLException;
 public interface DB {
 
     boolean isConnected();
+
+    DataSource getDataSource();
 
     void connect() throws SQLException;
 
