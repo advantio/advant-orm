@@ -50,8 +50,8 @@ public class DBConfig {
         host = configProps.getProperty("db.host");
         port = Integer.valueOf(configProps.getProperty("db.port", "0"));
         database = configProps.getProperty("db.database");
-        user = configProps.getProperty("db.user", null);
-        password = configProps.getProperty("db.password", null);
+        user = configProps.getProperty("db.user");
+        password = configProps.getProperty("db.password");
         Enumeration enumKey = configProps.keys();
         while (enumKey.hasMoreElements()) {
             String key = (String) enumKey.nextElement();
@@ -86,8 +86,8 @@ public class DBConfig {
         this.driver = dbType.getDriver();
         this.dbType = dbType;
         this.database = database;
-        this.user = user;
-        this.password = password;
+        this.user = user == null ? "" : user;
+        this.password = password == null ? "" : password;
     }
 
     public DBConnectionParams getParams() {
