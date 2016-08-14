@@ -1,7 +1,7 @@
 # Advant ORM (Examples)
 
 [![Build Status](https://travis-ci.org/advantio/advant-orm.svg?branch=master)](https://travis-ci.org/advantio/advant-orm)  
-**Wiki:** [User Guide](https://github.com/advantio/advant-orm/wiki)
+**Wiki:** [User Guide](https://github.com/advantio/advant-orm/wiki)  
 **License:** [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)  
 
 ## Introduction
