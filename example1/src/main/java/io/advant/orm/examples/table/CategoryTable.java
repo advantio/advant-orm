@@ -21,7 +21,9 @@ import io.advant.orm.annotation.Column;
 import io.advant.orm.annotation.Table;
 
 /**
+ * Category Table
  *
+ * @author Marco Romagnolo
  */
 @Table(name = "test_category")
 public class CategoryTable extends AbstractTable {

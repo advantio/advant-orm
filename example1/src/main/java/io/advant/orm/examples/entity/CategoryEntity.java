@@ -20,7 +20,9 @@ import io.advant.orm.Entity;
 import io.advant.orm.examples.table.CategoryTable;
 
 /**
+ * Category Entity
  *
+ * @author Marco Romagnolo
  */
 public class CategoryEntity extends CategoryTable implements Entity {
 

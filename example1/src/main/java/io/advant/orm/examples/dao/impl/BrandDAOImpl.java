@@ -19,13 +19,15 @@ package io.advant.orm.examples.dao.impl;
 import io.advant.orm.AbstractDAO;
 import io.advant.orm.DBConnection;
 import io.advant.orm.examples.dao.BrandDAO;
+import io.advant.orm.exception.OrmException;
 import io.advant.orm.internal.Condition;
 import io.advant.orm.internal.Conditions;
 import io.advant.orm.examples.entity.BrandEntity;
-import io.advant.orm.examples.exception.DAOException;
 
 /**
+ * Brand DAO Implementation
  *
+ * @author Marco Romagnolo
  */
 public class BrandDAOImpl extends AbstractDAO<BrandEntity> implements BrandDAO<BrandEntity> {
 
@@ -34,33 +36,9 @@ public class BrandDAOImpl extends AbstractDAO<BrandEntity> implements BrandDAO<B
     }
 
     @Override
-    public BrandEntity findByUserId(Integer userId) throws DAOException {
-        try {
-            Conditions conditions = new Conditions(new Condition(BrandEntity.class, "userId", userId));
-            return find(conditions).get(1);
-        } catch (Exception e) {
-            throw new DAOException(e);
-        }
-    }
-
-    @Override
-    public BrandEntity findByUsername(String username) throws DAOException {
-        try {
-            Conditions conditions = new Conditions(new Condition(BrandEntity.class, "username", username));
-            return find(conditions).get(1);
-        } catch (Exception e) {
-            throw new DAOException(e);
-        }
-    }
-
-    @Override
-    public BrandEntity findByEmail(String email) throws DAOException {
-        try {
-            Conditions conditions = new Conditions(new Condition(BrandEntity.class, "email", email));
-            return find(conditions).get(1);
-        } catch (Exception e) {
-            throw new DAOException(e);
-        }
+    public BrandEntity findByName(String name) throws OrmException {
+        Conditions conditions = new Conditions(new Condition(BrandEntity.class, "name", name));
+        return find(conditions).get(0);
     }
 
 }

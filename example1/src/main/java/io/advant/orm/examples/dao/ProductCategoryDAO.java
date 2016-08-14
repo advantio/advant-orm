@@ -19,8 +19,9 @@ package io.advant.orm.examples.dao;
 import io.advant.orm.DAO;
 
 /**
+ * Product Category DAO Interface
  *
- * @param <T>
+ * @author Marco Romagnolo
  */
 public interface ProductCategoryDAO<T> extends DAO<T> {
 }

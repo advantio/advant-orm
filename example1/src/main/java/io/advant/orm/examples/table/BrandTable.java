@@ -21,7 +21,9 @@ import io.advant.orm.annotation.Column;
 import io.advant.orm.annotation.Table;
 
 /**
+ * Brand Table
  *
+ * @author Marco Romagnolo
  */
 @Table(name = "test_brand")
 public class BrandTable extends AbstractTable {

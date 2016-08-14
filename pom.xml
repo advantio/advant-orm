@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>v1.0</module>
+        <module>example1</module>
     </modules>
 
     <name>Advant ORM Examples</name>

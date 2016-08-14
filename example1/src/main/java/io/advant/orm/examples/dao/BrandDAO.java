@@ -18,18 +18,15 @@ package io.advant.orm.examples.dao;
 
 import io.advant.orm.DAO;
 import io.advant.orm.examples.entity.BrandEntity;
-import io.advant.orm.examples.exception.DAOException;
+import io.advant.orm.exception.OrmException;
 
 /**
+ * Brand DAO Interface
  *
- * @param <T>
+ * @author Marco Romagnolo
  */
 public interface BrandDAO<T> extends DAO<T> {
 
-    BrandEntity findByUserId(Integer userId) throws DAOException;
-
-    BrandEntity findByUsername(String username) throws DAOException;
-
-    BrandEntity findByEmail(String email) throws DAOException;
+    BrandEntity findByName(String name) throws OrmException;
 
 }

@@ -22,7 +22,9 @@ import io.advant.orm.examples.dao.ProductDAO;
 import io.advant.orm.examples.entity.ProductEntity;
 
 /**
+ * Product DAO Implementation
  *
+ * @author Marco Romagnolo
  */
 public class ProductDAOImpl extends AbstractDAO<ProductEntity> implements ProductDAO<ProductEntity> {
 

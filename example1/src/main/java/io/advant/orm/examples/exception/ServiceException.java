@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-package io.advant.orm.examples.entity;
-
-import io.advant.orm.Entity;
-import io.advant.orm.examples.table.CategoryTable;
+package io.advant.orm.examples.exception;
 
 /**
+ * Service Exception
  *
+ * @author Marco Romagnolo
  */
-public class CategoryEntity extends CategoryTable implements Entity {
-
-    @Override
-    public String toString() {
-        return "CategoryEntity{} " + super.toString();
+public class ServiceException extends Exception {
+    public ServiceException(Exception e) {
+        super(e);
     }
 }

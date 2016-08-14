@@ -20,7 +20,9 @@ import io.advant.orm.Entity;
 import io.advant.orm.examples.table.BrandTable;
 
 /**
+ * Brand Entity
  *
+ * @author Marco Romagnolo
  */
 public class BrandEntity extends BrandTable implements Entity {
 

@@ -21,6 +21,12 @@ import io.advant.orm.DBConnection;
 import io.advant.orm.examples.dao.ProductCategoryDAO;
 import io.advant.orm.examples.entity.ProductCategoryEntity;
 
+/**
+ * ProductCategory DAO Implementation
+ * Many-to-Many Association between Product and Category
+ *
+ * @author Marco Romagnolo
+ */
 public class ProductCategoryDAOImpl extends AbstractDAO<ProductCategoryEntity> implements ProductCategoryDAO<ProductCategoryEntity> {
 
     public ProductCategoryDAOImpl(DBConnection connection) {

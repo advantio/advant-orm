@@ -1,11 +1,3 @@
-package io.advant.orm.examples.entity;
-
-import io.advant.orm.Entity;
-import io.advant.orm.annotation.Relation;
-import io.advant.orm.examples.table.ProductTable;
-
-import java.util.List;
-
 /**
  * Copyright 2016 Advant I/O
  *
@@ -22,8 +14,18 @@ import java.util.List;
  * limitations under the License.
  */
 
+package io.advant.orm.examples.entity;
+
+import io.advant.orm.Entity;
+import io.advant.orm.annotation.Relation;
+import io.advant.orm.examples.table.ProductTable;
+
+import java.util.List;
+
 /**
+ * Product Entity
  *
+ * @author Marco Romagnolo
  */
 public class ProductEntity extends ProductTable implements Entity {
 

@@ -22,6 +22,11 @@ import io.advant.orm.annotation.Table;
 
 import java.util.Date;
 
+/**
+ * Product Table
+ *
+ * @author Marco Romagnolo
+ */
 @Table(name = "test_product")
 public class ProductTable extends AbstractTable {
 

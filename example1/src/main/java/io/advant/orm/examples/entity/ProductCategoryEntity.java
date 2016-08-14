@@ -21,7 +21,9 @@ import io.advant.orm.annotation.Relation;
 import io.advant.orm.examples.table.ProductCategoryTable;
 
 /**
+ * Product Category association Entity
  *
+ * @author Marco Romagnolo
  */
 public class ProductCategoryEntity extends ProductCategoryTable implements Entity {
 
