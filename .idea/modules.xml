@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="ProjectModuleManager">
-    <modules>
-      <module fileurl="file://$PROJECT_DIR$/v1.0/advant-orm-examples.iml" filepath="$PROJECT_DIR$/v1.0/advant-orm-examples.iml" />
-      <module fileurl="file://$PROJECT_DIR$/advant-orm-examples-parent.iml" filepath="$PROJECT_DIR$/advant-orm-examples-parent.iml" />
-    </modules>
-  </component>
-</project>
