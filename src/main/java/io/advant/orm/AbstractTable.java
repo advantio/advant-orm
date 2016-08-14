@@ -21,7 +21,7 @@ import io.advant.orm.annotation.Column;
 import java.util.Objects;
 
 /**
- *
+ * @author Marco Romagnolo
  */
 public abstract class AbstractTable {
 

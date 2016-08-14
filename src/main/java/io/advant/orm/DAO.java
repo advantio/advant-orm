@@ -21,6 +21,12 @@ import io.advant.orm.internal.Conditions;
 
 import java.util.List;
 
+/**
+ *
+ * @param <T>
+ *
+ * @author Marco Romagnolo
+ */
 public interface DAO<T> {
 
     int deleteAll() throws OrmException;
@@ -41,11 +47,4 @@ public interface DAO<T> {
 
     List<T> find(Conditions conditions) throws OrmException;
 
-    boolean isAutoCommit() throws OrmException;
-
-    void setAutoCommit(boolean autoCommit) throws OrmException;
-
-    void commit() throws OrmException;
-
-    void rollback();
 }

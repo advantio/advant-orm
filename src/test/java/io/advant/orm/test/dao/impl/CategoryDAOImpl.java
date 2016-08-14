@@ -22,7 +22,7 @@ import io.advant.orm.test.dao.CategoryDAO;
 import io.advant.orm.test.entity.CategoryEntity;
 
 /**
- *
+ * @author Marco Romagnolo
  */
 public class CategoryDAOImpl extends AbstractDAO<CategoryEntity> implements CategoryDAO<CategoryEntity> {
 

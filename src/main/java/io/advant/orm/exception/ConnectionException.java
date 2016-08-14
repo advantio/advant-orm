@@ -17,7 +17,7 @@
 package io.advant.orm.exception;
 
 /**
- *
+ * @author Marco Romagnolo
  */
 public class ConnectionException extends Exception {
 

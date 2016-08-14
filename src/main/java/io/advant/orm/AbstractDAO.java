@@ -32,6 +32,8 @@ import java.util.logging.Logger;
 /**
  *
  * @param <T>
+ *
+ * @author Marco Romagnolo
  */
 public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 
@@ -207,45 +209,6 @@ public abstract class AbstractDAO<T extends Entity> implements DAO<T> {
 			close();
 		}
 	}
-
-    @Override
-    public boolean isAutoCommit() throws OrmException {
-        try {
-            return connection.getAutoCommit();
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
-            throw new OrmException(e);
-        }
-    }
-
-    @Override
-    public void setAutoCommit(boolean autoCommit) throws OrmException {
-        try {
-            connection.setAutoCommit(autoCommit);
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
-            throw new OrmException(e);
-        }
-    }
-
-    @Override
-    public void commit() throws OrmException {
-        try {
-            connection.commit();
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
-            throw new OrmException(e);
-        }
-    }
-
-    @Override
-    public void rollback() {
-        try {
-            connection.rollback();
-        } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
-        }
-    }
 
     protected T toEntity(ResultSet rs) throws OrmException {
 		try {

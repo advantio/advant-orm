@@ -8,7 +8,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Created by Marco on 03/08/2016.
+ * @author Marco Romagnolo
  */
 public enum ValueType {
     BYTE(Byte.class),

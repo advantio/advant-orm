@@ -21,7 +21,7 @@ import io.advant.orm.type.ValueType;
 import java.lang.reflect.Field;
 
 /**
- *
+ * @author Marco Romagnolo
  */
 public class ColumnData {
 

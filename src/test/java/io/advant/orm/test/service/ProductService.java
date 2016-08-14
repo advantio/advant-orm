@@ -1,6 +1,23 @@
+/**
+ * Copyright 2016 Advant I/O
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.advant.orm.test.service;
 
 import io.advant.orm.DBConnection;
+import io.advant.orm.Transaction;
 import io.advant.orm.exception.OrmException;
 import io.advant.orm.test.dao.BrandDAO;
 import io.advant.orm.test.dao.CategoryDAO;
@@ -25,11 +42,13 @@ import java.util.logging.Logger;
 public class ProductService {
 
     private static final Logger LOGGER = Logger.getLogger(ProductService.class.getName());
+    private Transaction tx;
     private BrandDAO<BrandEntity> brandDAO;
     private CategoryDAO<CategoryEntity> categoryDAO;
     private ProductDAO<ProductEntity> productDAO;
 
     public ProductService(DBConnection connection) {
+        tx = new Transaction(connection);
         brandDAO = new BrandDAOImpl(connection);
         categoryDAO = new CategoryDAOImpl(connection);
         productDAO = new ProductDAOImpl(connection);
@@ -37,7 +56,7 @@ public class ProductService {
 
     public void insert() throws ServiceException {
         try {
-            brandDAO.setAutoCommit(false);
+            tx.setAutoCommit(false);
             // Insert Brands
             PrintUtil.action("Inserting brands");
 
@@ -58,10 +77,10 @@ public class ProductService {
             brandDAO.insert(brand2);
             PrintUtil.result("Inserted brand: " + brand2);
 
-            brandDAO.commit();
+            tx.commit();
         } catch (OrmException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
-            brandDAO.rollback();
+            tx.rollback();
             throw new ServiceException(e);
         }
     }
@@ -69,13 +88,13 @@ public class ProductService {
     public void update() throws ServiceException {
         BrandEntity brand1;
         try {
-            brandDAO.setAutoCommit(false);
+            tx.setAutoCommit(false);
             brand1 = new BrandEntity();
             brand1.setId(1001L);
             brand1.setName("Brand1_updated");
         } catch (OrmException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
-            brandDAO.rollback();
+            tx.rollback();
             throw new ServiceException(e);
         }
         try {
@@ -94,10 +113,10 @@ public class ProductService {
             brandDAO.update(brand);
             PrintUtil.result("Updated brand: " + brand);
 
-            brandDAO.commit();
+            tx.commit();
         } catch (OrmException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
-            brandDAO.rollback();
+            tx.rollback();
             throw new ServiceException(e);
         }
     }
@@ -144,14 +163,14 @@ public class ProductService {
     public void delete() throws ServiceException {
         try {
             PrintUtil.action("Deleting brand");
-            brandDAO.setAutoCommit(false);
+            tx.setAutoCommit(false);
             BrandEntity brand = new BrandEntity();
             brand.setId(1000L);
             brandDAO.delete(brand);
-            brandDAO.commit();
+            tx.commit();
         } catch (OrmException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
-            brandDAO.rollback();
+            tx.rollback();
             throw new ServiceException(e);
         }
     }
@@ -159,9 +178,9 @@ public class ProductService {
     public void deleteAll() throws ServiceException {
         try {
             PrintUtil.action("Deleting all brands");
-            brandDAO.setAutoCommit(false);
+            tx.setAutoCommit(false);
             brandDAO.deleteAll();
-            brandDAO.commit();
+            tx.commit();
         } catch (OrmException e) {
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
             throw new ServiceException(e);

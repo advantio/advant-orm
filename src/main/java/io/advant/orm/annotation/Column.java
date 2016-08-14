@@ -21,6 +21,8 @@ import java.lang.annotation.RetentionPolicy;
 
 /**
  * Identify Column Table
+ *
+ * @author Marco Romagnolo
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Column {

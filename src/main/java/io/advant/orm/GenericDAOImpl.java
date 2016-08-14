@@ -24,6 +24,8 @@ import java.util.List;
 /**
  *
  * @param <T>
+ *
+ * @author Marco Romagnolo
  */
 public class GenericDAOImpl<T extends Entity> extends AbstractDAO<T> implements GenericDAO<T> {
 

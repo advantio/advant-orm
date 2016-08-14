@@ -29,6 +29,8 @@ import java.util.logging.Logger;
 /**
  * Converter from JDBC ResultSet to Entity and from Entity to JDBC ResultSet
  * @param <T>
+ *
+ * @author Marco Romagnolo
  */
 public class EntityConverter<T extends Entity> {
 

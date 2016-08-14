@@ -20,6 +20,9 @@ import io.advant.orm.AbstractTable;
 import io.advant.orm.annotation.Column;
 import io.advant.orm.annotation.Table;
 
+/**
+ * @author Marco Romagnolo
+ */
 @Table(name = "test_product_category")
 public class ProductCategoryTable extends AbstractTable {
 

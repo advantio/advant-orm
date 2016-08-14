@@ -27,7 +27,7 @@ import io.advant.orm.test.entity.BrandEntity;
 import java.util.List;
 
 /**
- *
+ * @author Marco Romagnolo
  */
 public class BrandDAOImpl extends AbstractDAO<BrandEntity> implements BrandDAO<BrandEntity> {
 

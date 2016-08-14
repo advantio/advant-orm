@@ -21,6 +21,8 @@ import java.lang.annotation.RetentionPolicy;
 
 /**
  * Use to map table joins
+ *
+ * @author Marco Romagnolo
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Relation {

@@ -20,7 +20,7 @@ import io.advant.orm.Entity;
 import io.advant.orm.test.table.CategoryTable;
 
 /**
- *
+ * @author Marco Romagnolo
  */
 public class CategoryEntity extends CategoryTable implements Entity {
 
@@ -28,4 +28,5 @@ public class CategoryEntity extends CategoryTable implements Entity {
     public String toString() {
         return "CategoryEntity{} " + super.toString();
     }
+
 }

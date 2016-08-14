@@ -24,6 +24,8 @@ import java.util.List;
 /**
  *
  * @param <T>
+ *
+ * @author Marco Romagnolo
  */
 public interface GenericDAO<T> extends DAO<T> {
 

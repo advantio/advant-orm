@@ -21,6 +21,8 @@ import java.util.Date;
 
 /**
  * Parse ColumnData
+ *
+ * @author Marco Romagnolo
  */
 public class Parser {
 

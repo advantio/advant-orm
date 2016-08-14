@@ -17,7 +17,7 @@
 package io.advant.orm;
 
 /**
- *
+ * @author Marco Romagnolo
  */
 public interface Entity {
 

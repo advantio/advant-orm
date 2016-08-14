@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-/**
- *
- */
 package io.advant.orm.test.dao;
 
 import io.advant.orm.DAO;
 
+/**
+ *
+ * @param <T>
+ *
+ * @author Marco Romagnolo
+ */
 public interface ProductDAO<T> extends DAO<T> {
 
 }

@@ -22,12 +22,15 @@ import io.advant.orm.Entity;
 import io.advant.orm.exception.TableParseException;
 import io.advant.orm.exception.UnsynchronizedException;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.logging.Logger;
 
 /**
- *
+ * @author Marco Romagnolo
  */
 public class SqlProcessor {
 

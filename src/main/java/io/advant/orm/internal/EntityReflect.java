@@ -28,6 +28,8 @@ import java.util.*;
 /**
  * EntityReflect
  * @param <T>
+ *
+ * @author Marco Romagnolo
  */
 public class EntityReflect<T> {
 

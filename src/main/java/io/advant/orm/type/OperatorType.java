@@ -17,7 +17,7 @@
 package io.advant.orm.type;
 
 /**
- *
+ * @author Marco Romagnolo
  */
 public enum OperatorType {
     eq("="), lt("<"), gt(">"), le("<="), ge(">=");

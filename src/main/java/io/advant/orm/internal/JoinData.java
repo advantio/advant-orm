@@ -19,7 +19,7 @@ package io.advant.orm.internal;
 import java.util.Objects;
 
 /**
- *
+ * @author Marco Romagnolo
  */
 public class JoinData {
     private final String table;

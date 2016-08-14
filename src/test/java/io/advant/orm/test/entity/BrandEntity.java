@@ -20,7 +20,7 @@ import io.advant.orm.Entity;
 import io.advant.orm.test.table.BrandTable;
 
 /**
- *
+ * @author Marco Romagnolo
  */
 public class BrandEntity extends BrandTable implements Entity {
 
@@ -28,4 +28,5 @@ public class BrandEntity extends BrandTable implements Entity {
     public String toString() {
         return "BrandEntity{} " + super.toString();
     }
+
 }

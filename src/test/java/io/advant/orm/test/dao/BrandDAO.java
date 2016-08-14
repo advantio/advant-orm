@@ -23,6 +23,8 @@ import io.advant.orm.test.entity.BrandEntity;
 /**
  *
  * @param <T>
+ *
+ * @author Marco Romagnolo
  */
 public interface BrandDAO<T> extends DAO<T> {
 

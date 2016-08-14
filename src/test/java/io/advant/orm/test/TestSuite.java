@@ -21,6 +21,9 @@ import io.advant.orm.test.testsuite.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+/**
+ * @author Marco Romagnolo
+ */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         TestFunctions.class,

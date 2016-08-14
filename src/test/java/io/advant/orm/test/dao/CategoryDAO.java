@@ -21,6 +21,9 @@ import io.advant.orm.DAO;
 /**
  *
  * @param <T>
+ *
+ * @author Marco Romagnolo
  */
 public interface CategoryDAO<T> extends DAO<T> {
+
 }
