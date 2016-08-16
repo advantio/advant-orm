@@ -1,7 +1,7 @@
 # Advant ORM
 
 [![Build Status](https://travis-ci.org/advantio/advant-orm.svg?branch=master)](https://travis-ci.org/advantio/advant-orm)  
-**Repository:** [Central Maven](http://search.maven.org/#search%7Cga%7C1%7Cadvant-orm)  
+**Maven Repository:** [advant-orm-1.0.jar](http://search.maven.org/#artifactdetails%7Cio.advant%7Cadvant-orm%7C1.0%7Cjar)  
 **Wiki:** [User Guide 1.0](https://github.com/advantio/advant-orm/wiki/Advant-ORM-1.0)  
 **Documentation:** [Javadocs 1.0](http://advantio.github.io/advant-orm/api-docs/1.0/javadoc/index.html)  
 **License:** [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)  
