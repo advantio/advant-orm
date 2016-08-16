@@ -10,12 +10,12 @@
 This is the simplest ORM (Object Relational Mapping) to work with all popular databases (RDBMS) 
 - Mysql
 - Postgres
-- Oracle
-- DB2
 - SQLite
 - H2
 - HSQLDB
 - Derby
+- Oracle
+- DB2
 
 ### Prerequisites
 You must comply with these requirements before implement Advant ORM in your application: 
@@ -24,11 +24,11 @@ You must comply with these requirements before implement Advant ORM in your appl
 - Database correctly installed and accessible with your credentials
 
 ### Example with Mysql
-Create a db schema if you haven't yet
+Create a **db** schema if you haven't yet
 ~~~~
 CREATE DATABASE advantorm;
 ~~~~
-Create table with ID (AUTO_INCREMENT) and VERSION columns
+Create **table** with ID (AUTO_INCREMENT) and VERSION columns
 ~~~~
 CREATE TABLE person
 (
@@ -37,7 +37,7 @@ CREATE TABLE person
   name varchar(255) NOT NULL,
 );
 ~~~~
-Create table class extending `io.advant.orm.AbstractTable` with `@Table` and `@Column` annotations
+Create **Table class** extending `io.advant.orm.AbstractTable` with `@Table` and `@Column` annotations
 ~~~~
 @Table(name = "person")
 public class PersonTable extends AbstractTable {
@@ -51,31 +51,36 @@ public class PersonTable extends AbstractTable {
     }
 }
 ~~~~
-Create entity class extending PersonTable and implementing `io.advant.orm.Entity`
+Create **Entity** class extending PersonTable and implementing `io.advant.orm.Entity`
 ~~~~
 public class PersonEntity extends Personable implements Entity {}
 ~~~~
-Create DAO interface extending `io.advant.orm.DAO` with generics
+Create **DAO interface** extending `io.advant.orm.DAO` with generics
 ~~~~
 public interface PersonDAO<T> extends DAO<T> {}
 ~~~~
-Create DAO implementation class extending `io.advant.orm.AbstractDAO` and generics configured with entity class
+Create **DAO implementation** class extending `io.advant.orm.AbstractDAO` and generics configured with entity class
 ~~~~
 public class PersonDAOImpl extends AbstractDAO<PersonEntity> implements PersonDAO<PersonEntity> {}
 ~~~~
-Now you can select insert update and delete from Person table
+Configure **advantorm.properties** file with entities, database credentials and parameters
+~~~~
+db.type=mysql
+db.host=localhost
+db.port=3306
+db.database=advantorm
+db.user=root
+db.password=
+entity.1=com.example.entity.PersonEntity
+~~~~
+Now you can **select() insert() update() and delete()** from Person table
 ~~~~
 public static void main() throws ConnectionException, OrmException {
-    // Set entities
-    HashSet<String> entities = new HashSet<>();
-    entities.add(PersonEntity.class.getName());
+    // Load DB instance from advantorm.properties
+    DB db = DBFactory.getInstance();
     
-    // Set Database connection parameters
-    Params params = new DBHostParams(DBType.MYSQL, "localhost", 3306, "advantorm", "root", "");
-    
-    // Get connection
-    DBConnection conn = DB.newInstance(params, entities).getConnection();
-    PersonDAO<PersonEntity> dao = new PersonDAOImpl(conn);
+    // Initialize DAO with DBConnection
+    PersonDAO<PersonEntity> dao = new PersonDAOImpl(db.getConnection());
     
     //Create your entity and set values
     PersonEntity entity = new PersonEntity();
@@ -95,4 +100,4 @@ public static void main() throws ConnectionException, OrmException {
 You can also use `io.advant.orm.GenericDAO` by using entity on fly without create DAOs for each entity
 
 ### Insight
-if you want to increase your Advant ORM knowledge follow this [link](https://github.com/advantio/advant-orm/wiki/Advant-ORM-1.0 "Advant ORM 1.0")
+if you want to increase your Advant ORM knowledge follow this [link](https://github.com/advantio/advant-orm/wiki)
